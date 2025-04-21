@@ -1,19 +1,33 @@
 import streamlit as st
 
-st.set_page_config(page_title="Calculadora PayPal", layout="centered")
+# Configuración de la página
+st.set_page_config(page_title="Calculadora Wallet Cambios", layout="centered")
 
-# Mostrar el logo desde GitHub (versión cruda)
-st.image("https://raw.githubusercontent.com/filtrosofia/calculadora/main/output-onlinepngtools.png", width=200)
+# Centrar el logo y hacerlo más pequeño usando HTML
+st.markdown(
+    """
+    <div style="text-align: center;">
+        <img src="https://raw.githubusercontent.com/filtrosofia/calculadora/main/output-onlinepngtools.png" width="120"/>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
 
-# Título e instrucciones
-st.title("🧮 Calculadora de efectivo de Wallet Cambios")
+# Título centrado usando HTML
+st.markdown(
+    """
+    <h1 style='text-align: center;'>🧮 Calculadora de efectivo de Wallet Cambios</h1>
+    """,
+    unsafe_allow_html=True
+)
+
 st.markdown("Las comisiones son del **5% + $0**.")
-st.caption("Ingresa el monto y verás el resultado automáticamente.")
+st.markdown("Ingresa el monto y verás el resultado automáticamente.")
 
-# Input
+# Entrada
 recibir = st.number_input("Monto que deseas recibir (USD):", min_value=0.0, step=1.0)
 
-# Cálculo inverso
+# Cálculo
 if recibir > 0:
     total_enviar = recibir / (1 - 0.05)
     comision = total_enviar - recibir
