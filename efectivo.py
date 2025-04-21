@@ -21,7 +21,7 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-st.markdown("Las comisiones son del **5% + $0**.")
+st.markdown("Las comisiones son del **5%**.")
 st.markdown("Ingresa el monto y verás el resultado automáticamente.")
 
 # Entrada
