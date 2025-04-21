@@ -1,7 +1,5 @@
 import streamlit as st
 
-import streamlit as st
-
 # Configurar página
 st.set_page_config(page_title="Calculadora Wallet Cambios", layout="centered")
 
