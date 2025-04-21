@@ -48,7 +48,7 @@ st.markdown(
 )
 
 # Subtítulo + entrada
-st.markdown("Las comisiones son del **5% + $0**.")
+st.markdown("Las comisiones son del **5%**.")
 st.markdown("Ingresa el monto y verás el resultado automáticamente.")
 
 recibir = st.number_input("Monto que deseas recibir (USD):", min_value=0.0, step=1.0)
