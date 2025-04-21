@@ -43,7 +43,7 @@ st.markdown(
 
 # Título centrado y adaptable
 st.markdown(
-    "<h1 class='titulo'>🧮 Calculadora de efectivo de Wallet Cambios</h1>",
+    "<h2 class='titulo'>🧮 Calculadora de efectivo de Wallet Cambios</h2>",
     unsafe_allow_html=True
 )
 
