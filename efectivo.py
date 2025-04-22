@@ -52,8 +52,8 @@ st.markdown(
 )
 
 # Título
-st.markdown("<h2 class='titulo'>🧮 Calculadoras de Wallet Cambios </h2>", unsafe_allow_html=True)
-st.markdown("<h3 class='titulo'>🧮 Calculadoras de efectivo</h3>", unsafe_allow_html=True)
+st.markdown("<h2 class='titulo'>Calculadoras de Wallet Cambios </h2>", unsafe_allow_html=True)
+st.markdown("<h3 class='titulo'>🧮 Calculadora de efectivo</h3>", unsafe_allow_html=True)
 st.markdown("Las comisiones son del **5%**.")
 st.markdown("Ingresa el monto y verás el resultado automáticamente.")
 
