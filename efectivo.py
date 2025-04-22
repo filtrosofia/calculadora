@@ -56,7 +56,7 @@ if recibir > 0:
 # ────────────────────────────────────────────────
 # Segunda calculadora: USD ↔ Bs (con tasa dinámica)
 st.markdown("---")
-st.markdown("<h2 class='titulo'>💱 Calculadora Bs / USD</h2>", unsafe_allow_html=True)
+st.markdown("<h2 class='titulo'>💱 Calculadora USD</h2>", unsafe_allow_html=True)
 
 # Cargar tasa desde Google Sheets pública
 sheet_url = "https://docs.google.com/spreadsheets/d/1T5fq8FLpLHDmtiADlAa70E8xkA9st1rs/gviz/tq?tqx=out:csv&sheet=TASAS%20COL%20-%20VEN"
