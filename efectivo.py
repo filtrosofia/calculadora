@@ -60,12 +60,10 @@ st.markdown("<h2 class='titulo'>💱 Calculadora USD</h2>", unsafe_allow_html=Tr
 
 # Cargar tasa desde Google Sheets pública
 sheet_url = "https://docs.google.com/spreadsheets/d/1T5fq8FLpLHDmtiADlAa70E8xkA9st1rs/gviz/tq?tqx=out:csv&sheet=TASAS%20COL%20-%20VEN"
-df = pd.read_csv(sheet_url)
 
-# Obtener tasa de compra para VENEZUELA
 try:
-    venezuela_row = df[df['PAIS'].str.upper() == 'VENEZUELA']
-    tasa = float(venezuela_row['COMPRA'].values[0])
+    df = pd.read_csv(sheet_url, header=None)
+    tasa = float(df.iloc[1, 12])  # Celda M2
     st.markdown(f"Tasa actual: **{tasa} Bs/USD**")
     st.markdown("Ingresa el monto y verás el resultado automáticamente.")
 except Exception as e:
@@ -85,3 +83,4 @@ usd_enviar2 = st.number_input("Si se envían (USD):", min_value=0.0, step=1.0, k
 if usd_enviar2 > 0:
     bs_recibir2 = usd_enviar2 * tasa
     st.write(f"**Se reciben:** {bs_recibir2:.2f} Bs")
+
