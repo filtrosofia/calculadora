@@ -66,6 +66,8 @@ df = pd.read_csv(sheet_url)
 try:
     tasa = float(df.iloc[1, 12])
     st.markdown(f"Tasa actual: **{tasa} Bs/USD**")
+    st.markdown("Ingresa el monto y verás el resultado automáticamente.")
+
 except Exception as e:
     st.error("No se pudo obtener la tasa desde Google Sheets.")
     st.stop()
