@@ -4,7 +4,7 @@ import pandas as pd
 # Configurar página
 st.set_page_config(page_title="Calculadora Wallet Cambios", layout="centered")
 
-# CSS para centrar, escalar en móvil y ajustar el diseño
+# CSS personalizado (solo ampliando lo que pediste)
 st.markdown("""
     <style>
         .logo-container img {
@@ -18,12 +18,11 @@ st.markdown("""
             font-size: 2em;
         }
         .destacado {
-            font-size: 1.3em !important;
+            font-size: 1.2em !important;
         }
-        .salida {
-            font-size: 1.4em !important;
+        .resultado {
+            font-size: 1.3em !important;
             font-weight: bold;
-            margin-top: 0.5em;
         }
         @media screen and (max-width: 768px) {
             .logo-container img {
@@ -35,7 +34,7 @@ st.markdown("""
             .destacado {
                 font-size: 1.1em !important;
             }
-            .salida {
+            .resultado {
                 font-size: 1.2em !important;
             }
         }
@@ -57,7 +56,7 @@ st.markdown("<h2 class='titulo'>🧮 Calculadora de efectivo de Wallet Cambios</
 st.markdown("Las comisiones son del **5%**.")
 st.markdown("Ingresa el monto y verás el resultado automáticamente.")
 
-# Primera calculadora: efectivo + comisiones
+# Primera calculadora
 recibir = st.number_input("Monto que deseas recibir (USD):", min_value=0.0, step=1.0)
 if recibir > 0:
     total_enviar = recibir / (1 - 0.05)
@@ -65,33 +64,32 @@ if recibir > 0:
     st.write(f"**Comisión estimada:** ${comision:.2f}")
     st.write(f"**Debes enviar:** ${total_enviar:.2f}")
 
-# ────────────────────────────────────────────────
-# Segunda calculadora: USD ↔ Bs (con tasa dinámica)
+# Separador
 st.markdown("---")
 st.markdown("<h2 class='titulo'>💱 Calculadora USD</h2>", unsafe_allow_html=True)
 
 # Cargar tasa desde Google Sheets pública
 sheet_url = "https://docs.google.com/spreadsheets/d/1T5fq8FLpLHDmtiADlAa70E8xkA9st1rs/gviz/tq?tqx=out:csv&sheet=TASAS%20COL%20-%20VEN"
+
 try:
-    df = pd.read_csv(sheet_url)
-    tasa = float(df.iloc[1, 1])  # Celda M2 = columna 1, fila 2 en esa tabla
-    st.markdown(f"<div class='destacado'>Tasa actual: <strong>{tasa} Bs/USD</strong></div>", unsafe_allow_html=True)
+    df = pd.read_csv(sheet_url, header=None)
+    tasa = float(df.iloc[1, 12])  # Celda M2
+    st.markdown(f"Tasa actual: **{tasa} Bs/USD**")
     st.markdown("Ingresa el monto y verás el resultado automáticamente.")
 except Exception as e:
     st.error("No se pudo obtener la tasa de VENEZUELA desde Google Sheets.")
     st.stop()
 
-# Modo 1: Para recibir X Bs → ¿cuántos USD enviar?
-st.markdown("<h3 class='destacado'>📤 De Bolívares a Dólares</h3>", unsafe_allow_html=True)
-bs_recibir = st.number_input("Para recibir (Bs):", min_value=0.0, step=1.0, key="bs_recibir")
+# Modo 1: De Bs a USD
+st.markdown("<h3 class='destacado'>📤 Para recibir (Bs):</h3>", unsafe_allow_html=True)
+bs_recibir = st.number_input("", min_value=0.0, step=1.0, key="bs_recibir")
 if bs_recibir > 0:
     usd_enviar = bs_recibir / tasa
-    st.markdown(f"<div class='salida'>Hay que enviar: ${usd_enviar:.2f} USD</div>", unsafe_allow_html=True)
+    st.markdown(f"<div class='resultado'>Hay que enviar: ${usd_enviar:.2f} USD</div>", unsafe_allow_html=True)
 
-# Modo 2: Para enviar X USD → ¿cuántos Bs se reciben?
-st.markdown("<h3 class='destacado'>📥 De Dólares a Bolívares</h3>", unsafe_allow_html=True)
-usd_enviar2 = st.number_input("Si se envían (USD):", min_value=0.0, step=1.0, key="usd_enviar")
+# Modo 2: De USD a Bs
+st.markdown("<h3 class='destacado'>📥 Si se envían (USD):</h3>", unsafe_allow_html=True)
+usd_enviar2 = st.number_input("", min_value=0.0, step=1.0, key="usd_enviar")
 if usd_enviar2 > 0:
     bs_recibir2 = usd_enviar2 * tasa
-    st.markdown(f"<div class='salida'>Se reciben: {bs_recibir2:.2f} Bs</div>", unsafe_allow_html=True)
-
+    st.markdown(f"<div class='resultado'>Se reciben: {bs_recibir2:.2f} Bs</div>", unsafe_allow_html=True)
