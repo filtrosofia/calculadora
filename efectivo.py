@@ -52,7 +52,8 @@ st.markdown(
 )
 
 # Título
-st.markdown("<h2 class='titulo'>🧮 Calculadora de efectivo de Wallet Cambios</h2>", unsafe_allow_html=True)
+st.markdown("<h2 class='titulo'>🧮 Calculadoras de Wallet Cambios </h2>", unsafe_allow_html=True)
+st.markdown("<h3 class='titulo'>🧮 Calculadoras de efectivo</h3>", unsafe_allow_html=True)
 st.markdown("Las comisiones son del **5%**.")
 st.markdown("Ingresa el monto y verás el resultado automáticamente.")
 
@@ -66,7 +67,7 @@ if recibir > 0:
 
 # Separador
 st.markdown("---")
-st.markdown("<h2 class='titulo'>💱 Calculadora USD</h2>", unsafe_allow_html=True)
+st.markdown("<h3 class='titulo'>💱 Calculadora USD</h3>", unsafe_allow_html=True)
 
 # Cargar tasa desde Google Sheets pública
 sheet_url = "https://docs.google.com/spreadsheets/d/1T5fq8FLpLHDmtiADlAa70E8xkA9st1rs/gviz/tq?tqx=out:csv&sheet=TASAS%20COL%20-%20VEN"
