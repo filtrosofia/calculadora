@@ -25,6 +25,10 @@ st.markdown("""
             font-size: 1.3em !important;
             font-weight: bold;
         }
+        h3 {
+            font-size: 2em;
+            text-align: center;
+        }
         @media screen and (max-width: 768px) {
             .logo-container img {
                 width: 90px;
@@ -41,6 +45,7 @@ st.markdown("""
         }
     </style>
 """, unsafe_allow_html=True)
+
 
 # Logo
 st.markdown("""
@@ -73,7 +78,7 @@ if enviados > 0:
 
 # Separador
 st.markdown("---")
-st.markdown("<h3 class='titulo'>💱 Calculadora USD a Bolívares 🇻🇪</h3>", unsafe_allow_html=True)
+st.markdown("### 💱 Calculadora USD a Bolívares 🇻🇪")
 
 # Cargar tasa desde Google Sheets pública
 sheet_url = "https://docs.google.com/spreadsheets/d/1T5fq8FLpLHDmtiADlAa70E8xkA9st1rs/gviz/tq?tqx=out:csv&sheet=TASAS%20COL%20-%20VEN"
