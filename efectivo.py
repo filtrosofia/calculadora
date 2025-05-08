@@ -59,17 +59,19 @@ st.markdown("Ingresa el monto y verás el resultado automáticamente.")
 
 # Primera calculadora
 recibir = st.number_input("Monto que deseas recibir (USD):", min_value=0.0, step=1.0)
+
+# Campo adicional: Si se envían (USD)
+enviados = st.number_input("Si se envían (USD):", min_value=0.0, step=1.0, key="enviados_manual")
+
 if recibir > 0:
     total_enviar = recibir / (1 - 0.05)
     comision = total_enviar - recibir
     st.write(f"**Comisión estimada:** ${comision:.2f}")
     st.write(f"**Debes enviar:** ${total_enviar:.2f}")
 
-    # NUEVA SUBSECCIÓN: Inverso desde envío
-    st.markdown("**Si se envían (USD):**")
-    st.markdown(f"<div class='resultado'>{total_enviar:.2f}</div>", unsafe_allow_html=True)
-    st.markdown("**Se reciben en efectivo:**")
-    st.markdown(f"<div class='resultado'>{recibir:.2f}</div>", unsafe_allow_html=True)
+if enviados > 0:
+    recibir_estimado = enviados * (1 - 0.05)
+    st.write(f"**Recibirás en efectivo:** ${recibir_estimado:.2f}")
 
 # Separador
 st.markdown("---")
@@ -100,3 +102,4 @@ usd_enviar2 = st.number_input("", min_value=0.0, step=1.0, key="usd_enviar")
 if usd_enviar2 > 0:
     bs_recibir2 = usd_enviar2 * tasa
     st.markdown(f"<div class='resultado'>Se reciben: {bs_recibir2:.2f} Bs</div>", unsafe_allow_html=True)
+
