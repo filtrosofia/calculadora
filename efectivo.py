@@ -61,7 +61,7 @@ if recibir > 0:
     comision = total_enviar - recibir
     st.markdown(f"**Comisión estimada:** ${comision:.2f}")
     st.markdown(f"**Debes enviar:** ${total_enviar:.2f}")
-
+st.markdown("---")
 # Campo 2: Si se envían (USD)
 enviados = st.number_input("Si se envían (USD):", min_value=0.0, step=1.0, key="enviados_manual")
 if enviados > 0:
