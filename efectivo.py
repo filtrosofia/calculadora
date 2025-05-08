@@ -19,6 +19,7 @@ st.markdown("""
         }
         .destacado {
             font-size: 1.2em !important;
+            font-weight: bold;
         }
         .resultado {
             font-size: 1.3em !important;
@@ -54,16 +55,18 @@ st.markdown("<h3 class='titulo'>🧮 Calculadora de efectivo</h3>", unsafe_allow
 st.markdown("Las comisiones son del **5%**.")
 st.markdown("Ingresa el monto y verás el resultado automáticamente.")
 
-# Campo 1: Monto que deseas recibir
-recibir = st.number_input("Monto que deseas recibir (USD):", min_value=0.0, step=1.0, key="recibir")
+# Campo 1: Para recibir (USD)
+st.markdown("<h3 class='destacado'>📤 Para recibir (USD):</h3>", unsafe_allow_html=True)
+recibir = st.number_input("", min_value=0.0, step=1.0, key="recibir")
 if recibir > 0:
     total_enviar = recibir / (1 - 0.05)
     comision = total_enviar - recibir
     st.markdown(f"**Comisión estimada:** ${comision:.2f}")
     st.markdown(f"**Debes enviar:** ${total_enviar:.2f}")
-st.markdown("---")
+
 # Campo 2: Si se envían (USD)
-enviados = st.number_input("Si se envían (USD):", min_value=0.0, step=1.0, key="enviados_manual")
+st.markdown("<h3 class='destacado'>📤 Si se envían (USD):</h3>", unsafe_allow_html=True)
+enviados = st.number_input("", min_value=0.0, step=1.0, key="enviados_manual")
 if enviados > 0:
     recibir_estimado = enviados * (1 - 0.05)
     st.markdown(f"**Recibirás en efectivo:** ${recibir_estimado:.2f}")
@@ -84,17 +87,20 @@ except Exception as e:
     st.error("No se pudo obtener la tasa de VENEZUELA desde Google Sheets.")
     st.stop()
 
-# Modo 1: De Bs a USD
+# Modo 1: De USD a Bs (invirtiendo el orden como pediste)
+st.markdown("<h3 class='destacado'>📤 Si se envían (USD):</h3>", unsafe_allow_html=True)
+usd_enviar2 = st.number_input("", min_value=0.0, step=1.0, key="usd_enviar")
+if usd_enviar2 > 0:
+    bs_recibir2 = usd_enviar2 * tasa
+    st.markdown(f"<div class='resultado'>Se reciben: {bs_recibir2:.2f} Bs</div>", unsafe_allow_html=True)
+
+# Divider
+st.markdown("---")
+
+# Modo 2: De Bs a USD
 st.markdown("<h3 class='destacado'>📤 Para recibir (Bs):</h3>", unsafe_allow_html=True)
 bs_recibir = st.number_input("", min_value=0.0, step=1.0, key="bs_recibir")
 if bs_recibir > 0:
     usd_enviar = bs_recibir / tasa
     st.markdown(f"<div class='resultado'>Hay que enviar: ${usd_enviar:.2f} USD</div>", unsafe_allow_html=True)
-
-# Modo 2: De USD a Bs
-st.markdown("<h3 class='destacado'>📥 Si se envían (USD):</h3>", unsafe_allow_html=True)
-usd_enviar2 = st.number_input("", min_value=0.0, step=1.0, key="usd_enviar")
-if usd_enviar2 > 0:
-    bs_recibir2 = usd_enviar2 * tasa
-    st.markdown(f"<div class='resultado'>Se reciben: {bs_recibir2:.2f} Bs</div>", unsafe_allow_html=True)
 
