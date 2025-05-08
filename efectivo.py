@@ -4,7 +4,7 @@ import pandas as pd
 # Configurar página
 st.set_page_config(page_title="Calculadora Wallet Cambios", layout="centered")
 
-# CSS personalizado (solo ampliando lo que pediste)
+# CSS personalizado
 st.markdown("""
     <style>
         .logo-container img {
@@ -42,14 +42,11 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # Logo
-st.markdown(
-    """
+st.markdown("""
     <div class="logo-container">
         <img src="https://raw.githubusercontent.com/filtrosofia/calculadora/main/output-onlinepngtools.png">
     </div>
-    """,
-    unsafe_allow_html=True
-)
+""", unsafe_allow_html=True)
 
 # Título
 st.markdown("<h2 class='titulo'>Calculadoras de Wallet Cambios </h2>", unsafe_allow_html=True)
@@ -57,21 +54,19 @@ st.markdown("<h3 class='titulo'>🧮 Calculadora de efectivo</h3>", unsafe_allow
 st.markdown("Las comisiones son del **5%**.")
 st.markdown("Ingresa el monto y verás el resultado automáticamente.")
 
-# Primera calculadora
-recibir = st.number_input("Monto que deseas recibir (USD):", min_value=0.0, step=1.0)
-
-# Campo adicional: Si se envían (USD)
-enviados = st.number_input("Si se envían (USD):", min_value=0.0, step=1.0, key="enviados_manual")
-
+# Campo 1: Monto que deseas recibir
+recibir = st.number_input("Monto que deseas recibir (USD):", min_value=0.0, step=1.0, key="recibir")
 if recibir > 0:
     total_enviar = recibir / (1 - 0.05)
     comision = total_enviar - recibir
-    st.write(f"**Comisión estimada:** ${comision:.2f}")
-    st.write(f"**Debes enviar:** ${total_enviar:.2f}")
+    st.markdown(f"**Comisión estimada:** ${comision:.2f}")
+    st.markdown(f"**Debes enviar:** ${total_enviar:.2f}")
 
+# Campo 2: Si se envían (USD)
+enviados = st.number_input("Si se envían (USD):", min_value=0.0, step=1.0, key="enviados_manual")
 if enviados > 0:
     recibir_estimado = enviados * (1 - 0.05)
-    st.write(f"**Recibirás en efectivo:** ${recibir_estimado:.2f}")
+    st.markdown(f"**Recibirás en efectivo:** ${recibir_estimado:.2f}")
 
 # Separador
 st.markdown("---")
