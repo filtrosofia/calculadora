@@ -65,6 +65,12 @@ if recibir > 0:
     st.write(f"**Comisión estimada:** ${comision:.2f}")
     st.write(f"**Debes enviar:** ${total_enviar:.2f}")
 
+    # NUEVA SUBSECCIÓN: Inverso desde envío
+    st.markdown("**Si se envían (USD):**")
+    st.markdown(f"<div class='resultado'>{total_enviar:.2f}</div>", unsafe_allow_html=True)
+    st.markdown("**Se reciben en efectivo:**")
+    st.markdown(f"<div class='resultado'>{recibir:.2f}</div>", unsafe_allow_html=True)
+
 # Separador
 st.markdown("---")
 st.markdown("<h3 class='titulo'>💱 Calculadora USD</h3>", unsafe_allow_html=True)
