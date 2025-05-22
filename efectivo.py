@@ -1,3 +1,4 @@
+
 import streamlit as st
 import pandas as pd
 
@@ -71,8 +72,7 @@ if enviados > 0:
     recibir_estimado = enviados * (1 - 0.05)
     st.markdown(f"**Recibirás en efectivo:** ${recibir_estimado:.2f}")
 
-# ────────────────────────────────
-# Calculadora USD a Bs (tasa M2)
+# Separador
 st.markdown("---")
 st.markdown("<h3 class='titulo'>💱 Calculadora USD a Bolívares 🇻🇪</h3>", unsafe_allow_html=True)
 
@@ -80,80 +80,88 @@ sheet_url = "https://docs.google.com/spreadsheets/d/1T5fq8FLpLHDmtiADlAa70E8xkA9
 
 try:
     df = pd.read_csv(sheet_url, header=None)
-    tasa = float(df.iloc[1, 12])  # Celda M2
+    tasa = float(df.iloc[1, 12])
     st.markdown(f"Tasa actual: **{tasa} Bs/USD**")
     st.markdown("Ingresa el monto y verás el resultado automáticamente.")
-except Exception as e:
-    st.error("No se pudo obtener la tasa de VENEZUELA.")
+except:
+    st.error("No se pudo obtener la tasa de VENEZUELA desde Google Sheets.")
     st.stop()
 
-# Si se envían (USD)
+# USD a Bs
 st.markdown("<h3 class='destacado'>📤 Si se envían (USD):</h3>", unsafe_allow_html=True)
-usd_envio = st.number_input("", min_value=0.0, step=1.0, key="usd_envio")
-if usd_envio > 0:
-    st.markdown(f"<div class='resultado'>Se reciben: {usd_envio * tasa:.2f} Bs</div>", unsafe_allow_html=True)
+usd_enviar2 = st.number_input("", min_value=0.0, step=1.0, key="usd_enviar")
+if usd_enviar2 > 0:
+    bs_recibir2 = usd_enviar2 * tasa
+    st.markdown(f"<div class='resultado'>Se reciben: {bs_recibir2:.2f} Bs</div>", unsafe_allow_html=True)
 
-# Divider
 st.markdown("---")
 
-# Para recibir (Bs)
+# Bs a USD
 st.markdown("<h3 class='destacado'>📤 Para recibir (Bs):</h3>", unsafe_allow_html=True)
-bs_recibo = st.number_input("", min_value=0.0, step=1.0, key="bs_recibo")
-if bs_recibo > 0:
-    st.markdown(f"<div class='resultado'>Hay que enviar: ${bs_recibo / tasa:.2f} USD</div>", unsafe_allow_html=True)
+bs_recibir = st.number_input("", min_value=0.0, step=1.0, key="bs_recibir")
+if bs_recibir > 0:
+    usd_enviar = bs_recibir / tasa
+    st.markdown(f"<div class='resultado'>Hay que enviar: ${usd_enviar:.2f} USD</div>", unsafe_allow_html=True)
 
-# ────────────────────────────────
-# VE -> CO Calculadora (tasa B4)
+# ───────────────────────────────────────────────
+# NUEVAS CALCULADORAS ADICIONALES
+# ───────────────────────────────────────────────
+
+# Calculadora Venezuela → Colombia
 st.markdown("---")
 st.markdown("<h3 class='titulo'>🇻🇪 Calculadora Venezuela → Colombia 🇨🇴</h3>", unsafe_allow_html=True)
 
+sheet_veco_url = "https://docs.google.com/spreadsheets/d/1T5fq8FLpLHDmtiADlAa70E8xkA9st1rs/gviz/tq?tqx=out:csv&sheet=TASAS%20AL%20MAYOR"
+
 try:
-    tasa_ve_co = float(df.iloc[3, 1])  # Celda B4
-    st.markdown(f"Tasa actual: **{tasa_ve_co} COP/Bs**")
+    df_veco = pd.read_csv(sheet_veco_url, header=None)
+    tasa_veco = float(df_veco.iloc[3, 1])
 except:
     st.error("No se pudo obtener la tasa de VENEZUELA a COLOMBIA.")
     st.stop()
 
-# Si se envían (Bs)
+# Bs a COP
 st.markdown("<h3 class='destacado'>📤 Si se envían (Bs):</h3>", unsafe_allow_html=True)
-bs_ve_co = st.number_input("", min_value=0.0, step=1.0, key="bs_ve_co")
-if bs_ve_co > 0:
-    st.markdown(f"<div class='resultado'>Se reciben: {bs_ve_co * tasa_ve_co:.2f} COP</div>", unsafe_allow_html=True)
+veco_bs = st.number_input("", min_value=0.0, step=1.0, key="veco_bs")
+if veco_bs > 0:
+    veco_cop = veco_bs * tasa_veco
+    st.markdown(f"<div class='resultado'>Recibirás: {veco_cop:.2f} COP</div>", unsafe_allow_html=True)
 
-# Divider
 st.markdown("---")
 
-# Para recibir (COP)
+# COP a Bs
 st.markdown("<h3 class='destacado'>📤 Para recibir (COP):</h3>", unsafe_allow_html=True)
-cop_deseado = st.number_input("", min_value=0.0, step=1.0, key="cop_deseado")
-if cop_deseado > 0:
-    st.markdown(f"<div class='resultado'>Hay que enviar: {cop_deseado / tasa_ve_co:.2f} Bs</div>", unsafe_allow_html=True)
+veco_cop_rev = st.number_input("", min_value=0.0, step=1.0, key="veco_cop")
+if veco_cop_rev > 0:
+    veco_bs_rev = veco_cop_rev / tasa_veco
+    st.markdown(f"<div class='resultado'>Debes enviar: {veco_bs_rev:.2f} Bs</div>", unsafe_allow_html=True)
 
-# ────────────────────────────────
-# CO -> VE Calculadora (tasa F9)
+# Calculadora Colombia → Venezuela
 st.markdown("---")
 st.markdown("<h3 class='titulo'>🇨🇴 Calculadora Colombia → Venezuela 🇻🇪</h3>", unsafe_allow_html=True)
 
 try:
-    tasa_co_ve = float(df.iloc[8, 5])  # Celda F9
-    st.markdown(f"Tasa actual: **{tasa_co_ve} Bs/COP**")
+    tasa_cove = float(df_veco.iloc[8, 5])
 except:
     st.error("No se pudo obtener la tasa de COLOMBIA a VENEZUELA.")
     st.stop()
 
-# Si se envían (COP)
+# COP a Bs
 st.markdown("<h3 class='destacado'>📤 Si se envían (COP):</h3>", unsafe_allow_html=True)
-cop_envio = st.number_input("", min_value=0.0, step=1.0, key="cop_envio")
-if cop_envio > 0:
-    st.markdown(f"<div class='resultado'>Se reciben: {cop_envio * tasa_co_ve:.2f} Bs</div>", unsafe_allow_html=True)
+cove_cop = st.number_input("", min_value=0.0, step=1.0, key="cove_cop")
+if cove_cop > 0:
+    cove_bs = cove_cop * tasa_cove
+    st.markdown(f"<div class='resultado'>Recibirás: {cove_bs:.2f} Bs</div>", unsafe_allow_html=True)
 
-# Divider
 st.markdown("---")
 
-# Para recibir (Bs)
+# Bs a COP
 st.markdown("<h3 class='destacado'>📤 Para recibir (Bs):</h3>", unsafe_allow_html=True)
-bs_deseado = st.number_input("", min_value=0.0, step=1.0, key="bs_deseado")
-if bs_deseado > 0:
+cove_bs_rev = st.number_input("", min_value=0.0, step=1.0, key="cove_bs")
+if cove_bs_rev > 0:
+    cove_cop_rev = cove_bs_rev / tasa_cove
+    st.markdown(f"<div class='resultado'>Debes enviar: {cove_cop_rev:.2f} COP</div>", unsafe_allow_html=True)
+
     st.markdown(f"<div class='resultado'>Hay que enviar: {bs_deseado / tasa_co_ve:.2f} COP</div>", unsafe_allow_html=True)
 
 
