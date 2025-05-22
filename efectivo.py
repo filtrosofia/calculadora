@@ -49,7 +49,7 @@ st.markdown("""
     </div>
 """, unsafe_allow_html=True)
 
-# Título principal
+# Título
 st.markdown("<h2 class='titulo'>Calculadoras de Wallet Cambios </h2>", unsafe_allow_html=True)
 
 # 🧮 Calculadora de efectivo
@@ -99,16 +99,15 @@ if bs_recibir > 0:
     usd_enviar = bs_recibir / tasa
     st.markdown(f"<div class='resultado'>Hay que enviar: ${usd_enviar:.2f} USD</div>", unsafe_allow_html=True)
 
-# 🟡 Calculadora Venezuela -> Colombia
+# 🇻🇪 Venezuela → Colombia
 st.markdown("---")
 st.markdown("<h3 class='titulo'>🇻🇪 Calculadora Venezuela → Colombia 🇨🇴</h3>", unsafe_allow_html=True)
-
 sheet_veco_url = "https://docs.google.com/spreadsheets/d/1T5fq8FLpLHDmtiADlAa70E8xkA9st1rs/gviz/tq?tqx=out:csv&sheet=TASAS%20AL%20MAYOR"
 
 try:
     df_veco = pd.read_csv(sheet_veco_url, header=None)
-    raw_val = df_veco.iloc[24, 1]  # B25
-    tasa_veco = float(raw_val)
+    raw_val_veco = df_veco.iloc[24, 1]  # Celda B25
+    tasa_veco = float(str(raw_val_veco).replace(",", ".").replace("$", "").strip())
     st.markdown(f"Tasa actual: **{tasa_veco:.2f} COP/Bs**")
     st.markdown("Ingresa el monto y verás el resultado automáticamente.")
 except Exception as e:
@@ -128,16 +127,14 @@ if cop_deseado > 0:
     bs_necesarios = cop_deseado / tasa_veco
     st.markdown(f"<div class='resultado'>Debes enviar: {bs_necesarios:.2f} Bs</div>", unsafe_allow_html=True)
 
-# 🔵 Calculadora Colombia -> Venezuela
+# 🇨🇴 Colombia → Venezuela
 st.markdown("---")
 st.markdown("<h3 class='titulo'>🇨🇴 Calculadora Colombia → Venezuela 🇻🇪</h3>", unsafe_allow_html=True)
 
-sheet_covene_url = "https://docs.google.com/spreadsheets/d/1T5fq8FLpLHDmtiADlAa70E8xkA9st1rs/gviz/tq?tqx=out:csv&sheet=TASAS%20AL%20MAYOR"
-
 try:
-    df_covene = pd.read_csv(sheet_covene_url, header=None)
-    raw_val = df_covene.iloc[25, 1]  # B26
-    tasa_covene = float(raw_val)
+    df_covene = pd.read_csv(sheet_veco_url, header=None)
+    raw_val_covene = df_covene.iloc[25, 1]  # Celda B26
+    tasa_covene = float(str(raw_val_covene).replace(",", ".").replace("$", "").strip())
     st.markdown(f"Tasa actual: **{tasa_covene:.2f} Bs/COP**")
     st.markdown("Ingresa el monto y verás el resultado automáticamente.")
 except Exception as e:
@@ -156,3 +153,4 @@ bs_objetivo = st.number_input("", min_value=0.0, step=1.0, key="bs_objetivo")
 if bs_objetivo > 0:
     cop_requerido = bs_objetivo / tasa_covene
     st.markdown(f"<div class='resultado'>Debes enviar: {cop_requerido:.2f} COP</div>", unsafe_allow_html=True)
+
