@@ -81,7 +81,7 @@ st.markdown("---")
 st.markdown("### 💱 Calculadora USD a Bolívares 🇻🇪")
 
 # Cargar tasa desde Google Sheets pública
-sheet_url = "https://docs.google.com/spreadsheets/d/1T5fq8FLpLHDmtiADlAa70E8xkA9st1rs/gviz/tq?tqx=out:csv&sheet=TASAS%20COL%20-%20VEN"
+sheet_url = "https://docs.google.com/spreadsheets/d/1ig4ihkUIeP7kaaR6yZeyOLF7j38Y_peytGKG6tgkqbw/gviz/tq?tqx=out:csv&sheet=TASAS%20COL%20-%20VEN"
 
 try:
     df = pd.read_csv(sheet_url, header=None)
