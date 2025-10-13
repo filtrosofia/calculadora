@@ -10,6 +10,10 @@ st.set_page_config(
     page_icon="https://raw.githubusercontent.com/filtrosofia/calculadora/main/output-onlinepngtools.png"
 )
 
+# Inicializar estado del dark mode
+if 'dark_mode' not in st.session_state:
+    st.session_state.dark_mode = False
+
 # Número de WhatsApp
 WHATSAPP_NUMBER = "584146108166"
 
@@ -18,57 +22,56 @@ def crear_enlace_whatsapp(mensaje):
     mensaje_encoded = urllib.parse.quote(mensaje)
     return f"https://wa.me/{WHATSAPP_NUMBER}?text={mensaje_encoded}"
 
-# CSS personalizado con guía de marca
-st.markdown("""
+# CSS personalizado con paleta mejorada
+st.markdown(f"""
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&family=Open+Sans:wght@300;400;600&display=swap');
         
-        /* Variables de color de marca */
-        :root {
+        /* Variables de color según modo */
+        {'--bg-primary: #0f1419; --bg-secondary: #1a2332; --bg-card: #253142; --text-primary: #ffffff; --text-secondary: #b8c5d6; --text-muted: #8b98a8; --shadow-color: rgba(0,0,0,0.5);' if st.session_state.dark_mode else '--bg-primary: #ffffff; --bg-secondary: #f8fafb; --bg-card: #ffffff; --text-primary: #1a2332; --text-secondary: #3a4a5c; --text-muted: #6b7a8e; --shadow-color: rgba(40, 129, 171, 0.15);'}
+        
+        :root {{
             --azul-brillante: #4BA9C3;
             --azul-medio: #3D9FC2;
-            --azul-turquesa: #399BC0;
             --azul-profundo: #2881AB;
             --naranja-energia: #F36B2D;
             --amarillo-calido: #FFC542;
-            --gris-claro: #F5F7FA;
-            --gris-medio: #A0A7AF;
-            --texto-principal: #3A3A3A;
-        }
-        
-        /* Modo oscuro */
-        [data-theme="dark"] {
-            --bg-primary: #1a1a2e;
-            --bg-secondary: #16213e;
-            --text-primary: #ffffff;
-            --text-secondary: #a0a7af;
-        }
+            --verde-whatsapp: #25D366;
+        }}
         
         /* Reset Streamlit */
-        .stApp {
-            background: linear-gradient(135deg, #E9F5FA 0%, #FFFFFF 100%);
+        .stApp {{
+            background: {'linear-gradient(135deg, #0f1419 0%, #1a2332 100%)' if st.session_state.dark_mode else 'linear-gradient(135deg, #f0f7fa 0%, #ffffff 100%)'};
             font-family: 'Open Sans', sans-serif;
-        }
+            color: var(--text-primary);
+        }}
         
         /* Logo container */
-        .logo-container {
+        .logo-container {{
             text-align: center;
             margin-bottom: 2rem;
             animation: fadeInDown 0.8s ease-out;
-        }
+        }}
         
-        .logo-container img {
+        .logo-container img {{
             width: clamp(90px, 15vw, 140px);
-            filter: drop-shadow(0 4px 8px rgba(40, 129, 171, 0.2));
+            filter: drop-shadow(0 4px 8px var(--shadow-color));
             transition: transform 0.3s ease;
-        }
+        }}
         
-        .logo-container img:hover {
+        .logo-container img:hover {{
             transform: scale(1.05);
-        }
+        }}
         
-        /* Títulos con jerarquía */
-        .titulo-principal {
+        /* Dark mode toggle */
+        .dark-mode-container {{
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 1rem;
+        }}
+        
+        /* Títulos con jerarquía y mejor contraste */
+        .titulo-principal {{
             font-family: 'Montserrat', sans-serif;
             font-weight: 700;
             font-size: clamp(1.8rem, 4vw, 2.5rem);
@@ -76,105 +79,137 @@ st.markdown("""
             color: var(--azul-profundo);
             margin-bottom: 0.5rem;
             animation: fadeInUp 0.8s ease-out;
-        }
+            text-shadow: 0 2px 4px var(--shadow-color);
+        }}
         
-        .subtitulo-calculadora {
+        .subtitulo-calculadora {{
             font-family: 'Montserrat', sans-serif;
             font-weight: 600;
             font-size: clamp(1.3rem, 3vw, 1.8rem);
             text-align: center;
-            color: var(--azul-medio);
+            color: {'#4BA9C3' if st.session_state.dark_mode else '#2881AB'};
             margin: 2rem 0 1rem 0;
             padding: 1rem;
-            background: linear-gradient(90deg, transparent, rgba(75, 169, 195, 0.1), transparent);
-            border-radius: 8px;
-        }
+            background: {'rgba(75, 169, 195, 0.15)' if st.session_state.dark_mode else 'rgba(75, 169, 195, 0.08)'};
+            border-radius: 12px;
+            border: 2px solid var(--azul-brillante);
+        }}
         
-        .label-campo {
+        .label-campo {{
             font-family: 'Open Sans', sans-serif;
             font-weight: 600;
             font-size: clamp(1rem, 2vw, 1.15rem);
-            color: var(--azul-profundo);
+            color: var(--text-primary);
             margin: 1.5rem 0 0.5rem 0;
-        }
+        }}
+        
+        .texto-info {{
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: clamp(0.9rem, 1.8vw, 1rem);
+            margin: 0.5rem 0;
+        }}
         
         /* Inputs mejorados */
-        .stNumberInput > div > div > input {
+        .stNumberInput > div > div > input {{
             border: 2px solid var(--azul-brillante);
-            border-radius: 8px;
+            border-radius: 10px;
             padding: 0.75rem;
             font-size: clamp(1rem, 2vw, 1.1rem);
             transition: all 0.3s ease;
             font-family: 'Open Sans', sans-serif;
-        }
+            background: var(--bg-card);
+            color: var(--text-primary);
+        }}
         
-        .stNumberInput > div > div > input:focus {
+        .stNumberInput > div > div > input:focus {{
             border-color: var(--naranja-energia);
             box-shadow: 0 0 0 3px rgba(243, 107, 45, 0.2);
             outline: none;
-        }
+        }}
         
         /* Resultados con animación */
-        .resultado-container {
+        .resultado-container {{
             background: linear-gradient(135deg, #4BA9C3 0%, #2881AB 100%);
             color: white;
             padding: 1.5rem;
             border-radius: 12px;
             margin: 1rem 0;
-            box-shadow: 0 8px 20px rgba(40, 129, 171, 0.3);
+            box-shadow: 0 8px 20px rgba(40, 129, 171, 0.4);
             animation: slideInUp 0.5s ease-out;
-        }
+        }}
         
-        .resultado-principal {
+        .resultado-principal {{
             font-family: 'Montserrat', sans-serif;
             font-weight: 700;
             font-size: clamp(1.3rem, 3vw, 1.6rem);
             margin-bottom: 0.5rem;
-        }
+            color: #ffffff;
+        }}
         
-        .resultado-secundario {
+        .resultado-secundario {{
             font-family: 'Open Sans', sans-serif;
             font-size: clamp(0.95rem, 2vw, 1.1rem);
             opacity: 0.95;
-        }
+            color: #ffffff;
+        }}
         
         /* Botones de monto rápido */
-        .montos-rapidos {
-            display: flex;
-            gap: 0.5rem;
-            flex-wrap: wrap;
-            margin: 1rem 0;
-            justify-content: center;
-        }
+        .montos-rapidos-container {{
+            text-align: center;
+            margin: 1.5rem 0;
+        }}
         
-        .btn-monto-rapido {
-            background: var(--gris-claro);
-            border: 2px solid var(--azul-brillante);
-            color: var(--azul-profundo);
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            font-family: 'Montserrat', sans-serif;
+        .montos-rapidos-label {{
+            color: var(--text-primary);
             font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: clamp(0.85rem, 1.5vw, 0.95rem);
-        }
+            font-size: clamp(0.9rem, 1.8vw, 1rem);
+            margin-bottom: 0.75rem;
+            display: block;
+        }}
         
-        .btn-monto-rapido:hover {
-            background: var(--azul-brillante);
-            color: white;
-            transform: translateY(-2px);
-        }
+        /* Información adicional */
+        .info-box {{
+            background: {'rgba(255, 197, 66, 0.2)' if st.session_state.dark_mode else 'rgba(255, 197, 66, 0.12)'};
+            border-left: 4px solid var(--amarillo-calido);
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            font-family: 'Open Sans', sans-serif;
+            font-size: clamp(0.9rem, 1.8vw, 1rem);
+            color: var(--text-primary);
+        }}
+        
+        .tasa-box {{
+            text-align: center;
+            background: {'rgba(75, 169, 195, 0.2)' if st.session_state.dark_mode else 'rgba(75, 169, 195, 0.1)'};
+            padding: 1.2rem;
+            border-radius: 12px;
+            margin: 1rem 0;
+            border: 2px solid var(--azul-brillante);
+        }}
+        
+        .tasa-principal {{
+            font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+            font-weight: 600;
+            color: var(--azul-profundo);
+            margin-bottom: 0.3rem;
+        }}
+        
+        .tasa-secundaria {{
+            font-size: clamp(0.8rem, 1.5vw, 0.9rem);
+            color: var(--text-muted);
+        }}
         
         /* Botón WhatsApp mejorado */
-        .whatsapp-btn {
+        .whatsapp-btn {{
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 0.5rem;
             background: linear-gradient(135deg, #25D366 0%, #20BA5A 100%);
             color: white;
-            padding: clamp(0.8rem, 2vw, 1rem) clamp(1.5rem, 3vw, 2rem);
+            padding: clamp(0.9rem, 2vw, 1.1rem) clamp(1.5rem, 3vw, 2rem);
             text-align: center;
             text-decoration: none;
             border-radius: 12px;
@@ -185,122 +220,182 @@ st.markdown("""
             box-shadow: 0 6px 15px rgba(37, 211, 102, 0.4);
             transition: all 0.3s ease;
             font-size: clamp(0.95rem, 2vw, 1.1rem);
-        }
+        }}
         
-        .whatsapp-btn:hover {
+        .whatsapp-btn:hover {{
             background: linear-gradient(135deg, #20BA5A 0%, #1EA952 100%);
             color: white;
             text-decoration: none;
             transform: translateY(-3px);
             box-shadow: 0 8px 20px rgba(37, 211, 102, 0.5);
-        }
+        }}
         
-        /* Información adicional */
-        .info-box {
-            background: rgba(255, 197, 66, 0.15);
-            border-left: 4px solid var(--amarillo-calido);
-            padding: 1rem;
-            border-radius: 8px;
-            margin: 1rem 0;
+        /* Botones de redes sociales */
+        .social-buttons {{
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            max-width: 400px;
+            margin: 2rem auto;
+        }}
+        
+        .social-btn {{
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.9rem 1.5rem;
+            border-radius: 10px;
+            text-decoration: none;
             font-family: 'Open Sans', sans-serif;
-            font-size: clamp(0.9rem, 1.8vw, 1rem);
-        }
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px var(--shadow-color);
+        }}
         
-        /* Toggle dark mode */
-        .dark-mode-toggle {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 999;
-            background: var(--azul-profundo);
+        .social-btn:hover {{
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px var(--shadow-color);
+            text-decoration: none;
+        }}
+        
+        .social-whatsapp {{
+            background: linear-gradient(135deg, #25D366 0%, #20BA5A 100%);
             color: white;
-            border: none;
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            cursor: pointer;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }}
+        
+        .social-instagram {{
+            background: linear-gradient(135deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+            color: white;
+        }}
+        
+        .social-email {{
+            background: linear-gradient(135deg, #4BA9C3 0%, #2881AB 100%);
+            color: white;
+        }}
+        
+        .social-icon {{
             font-size: 1.5rem;
-        }
+        }}
+        
+        /* Footer */
+        .footer {{
+            text-align: center;
+            color: var(--text-muted);
+            font-size: clamp(0.85rem, 1.6vw, 0.95rem);
+            padding: 2rem 0 1rem 0;
+            margin-top: 2rem;
+            border-top: 1px solid {'rgba(255,255,255,0.1)' if st.session_state.dark_mode else 'rgba(0,0,0,0.1)'};
+        }}
+        
+        .footer strong {{
+            color: var(--azul-profundo);
+        }}
         
         /* Animaciones */
-        @keyframes fadeInDown {
-            from {
+        @keyframes fadeInDown {{
+            from {{
                 opacity: 0;
                 transform: translateY(-30px);
-            }
-            to {
+            }}
+            to {{
                 opacity: 1;
                 transform: translateY(0);
-            }
-        }
+            }}
+        }}
         
-        @keyframes fadeInUp {
-            from {
+        @keyframes fadeInUp {{
+            from {{
                 opacity: 0;
                 transform: translateY(30px);
-            }
-            to {
+            }}
+            to {{
                 opacity: 1;
                 transform: translateY(0);
-            }
-        }
+            }}
+        }}
         
-        @keyframes slideInUp {
-            from {
+        @keyframes slideInUp {{
+            from {{
                 opacity: 0;
                 transform: translateY(20px);
-            }
-            to {
+            }}
+            to {{
                 opacity: 1;
                 transform: translateY(0);
-            }
-        }
+            }}
+        }}
         
         /* Responsive */
-        @media screen and (max-width: 1024px) {
-            .resultado-container {
+        @media screen and (max-width: 1024px) {{
+            .resultado-container {{
                 padding: 1.2rem;
-            }
-        }
+            }}
+        }}
         
-        @media screen and (max-width: 768px) {
-            .montos-rapidos {
-                gap: 0.3rem;
-            }
+        @media screen and (max-width: 768px) {{
+            .social-buttons {{
+                gap: 0.75rem;
+            }}
             
-            .btn-monto-rapido {
-                padding: 0.4rem 0.8rem;
-            }
-        }
+            .social-btn {{
+                padding: 0.75rem 1.2rem;
+            }}
+        }}
         
-        @media screen and (max-width: 375px) {
-            .logo-container img {
+        @media screen and (max-width: 375px) {{
+            .logo-container img {{
                 width: 80px;
-            }
+            }}
             
-            .whatsapp-btn {
+            .whatsapp-btn {{
                 padding: 0.7rem 1.2rem;
-            }
-        }
+            }}
+        }}
         
-        @media (orientation: landscape) and (max-height: 500px) {
-            .logo-container {
+        @media (orientation: landscape) and (max-height: 500px) {{
+            .logo-container {{
                 margin-bottom: 1rem;
-            }
+            }}
             
-            .subtitulo-calculadora {
+            .subtitulo-calculadora {{
                 margin: 1rem 0 0.5rem 0;
                 padding: 0.5rem;
-            }
-        }
+            }}
+        }}
         
         /* Ocultar elementos de Streamlit */
-        #MainMenu {visibility: hidden;}
-        footer {visibility: hidden;}
-        header {visibility: hidden;}
+        #MainMenu {{visibility: hidden;}}
+        footer {{visibility: hidden;}}
+        header {{visibility: hidden;}}
+        
+        /* Estilo para botones de Streamlit */
+        .stButton > button {{
+            width: 100%;
+            border-radius: 8px;
+            border: 2px solid var(--azul-brillante);
+            background: {'rgba(75, 169, 195, 0.15)' if st.session_state.dark_mode else '#f8fafb'};
+            color: var(--text-primary);
+            font-weight: 600;
+            padding: 0.6rem 1rem;
+            transition: all 0.3s ease;
+            font-family: 'Montserrat', sans-serif;
+        }}
+        
+        .stButton > button:hover {{
+            background: var(--azul-brillante);
+            color: white;
+            border-color: var(--azul-brillante);
+            transform: translateY(-2px);
+        }}
     </style>
 """, unsafe_allow_html=True)
+
+# Dark mode toggle
+col_toggle1, col_toggle2, col_toggle3 = st.columns([3, 1, 1])
+with col_toggle3:
+    if st.button("🌙" if not st.session_state.dark_mode else "☀️", key="dark_mode_toggle"):
+        st.session_state.dark_mode = not st.session_state.dark_mode
+        st.rerun()
 
 # Logo
 st.markdown("""
@@ -321,39 +416,36 @@ st.markdown("""
 
 # ==================== CALCULADORA DE EFECTIVO ====================
 st.markdown("<h2 class='subtitulo-calculadora'>💵 Calculadora de Efectivo</h2>", unsafe_allow_html=True)
-st.markdown("<p style='text-align: center; color: #3A3A3A;'>Comisión del <strong>5%</strong> aplicada</p>", unsafe_allow_html=True)
+st.markdown("<p class='texto-info'>Comisión del <strong>5%</strong> aplicada</p>", unsafe_allow_html=True)
 
-# Botones de monto rápido para efectivo
-st.markdown("""
-    <div class='montos-rapidos'>
-        <span style='color: #2881AB; font-weight: 600; margin-right: 0.5rem;'>Montos rápidos:</span>
-    </div>
-""", unsafe_allow_html=True)
+# Botones de monto rápido para efectivo - CALCULADORA 1
+st.markdown("<div class='montos-rapidos-label'>⚡ Montos rápidos:</div>", unsafe_allow_html=True)
 
 col1, col2, col3, col4 = st.columns(4)
-monto_rapido_efectivo = None
-
 with col1:
-    if st.button("$50", key="rapido_50_efectivo"):
-        monto_rapido_efectivo = 50.0
+    if st.button("$50", key="rapido_50_calc1"):
+        st.session_state.monto_calc1 = 50.0
 with col2:
-    if st.button("$100", key="rapido_100_efectivo"):
-        monto_rapido_efectivo = 100.0
+    if st.button("$100", key="rapido_100_calc1"):
+        st.session_state.monto_calc1 = 100.0
 with col3:
-    if st.button("$500", key="rapido_500_efectivo"):
-        monto_rapido_efectivo = 500.0
+    if st.button("$200", key="rapido_200_calc1"):
+        st.session_state.monto_calc1 = 200.0
 with col4:
-    if st.button("$1000", key="rapido_1000_efectivo"):
-        monto_rapido_efectivo = 1000.0
+    if st.button("$300", key="rapido_300_calc1"):
+        st.session_state.monto_calc1 = 300.0
 
 # Campo 1: Para recibir (USD)
 st.markdown("<div class='label-campo'>📥 ¿Cuánto deseas recibir en efectivo?</div>", unsafe_allow_html=True)
+
+# Usar valor del botón si existe
+valor_inicial_calc1 = st.session_state.get('monto_calc1', 0.0)
 recibir = st.number_input(
     "",
     min_value=0.0,
     step=1.0,
     key="recibir",
-    value=monto_rapido_efectivo if monto_rapido_efectivo else 0.0,
+    value=valor_inicial_calc1,
     help="Ingresa la cantidad en USD que deseas recibir",
     label_visibility="collapsed"
 )
@@ -366,7 +458,7 @@ if recibir > 0:
         <div class='resultado-container'>
             <div class='resultado-principal'>💰 Debes enviar: ${total_enviar:.2f} USD</div>
             <div class='resultado-secundario'>Comisión: ${comision:.2f} | Recibirás: ${recibir:.2f}</div>
-            <div class='resultado-secundario' style='margin-top: 0.5rem; opacity: 0.8;'>
+            <div class='resultado-secundario' style='margin-top: 0.5rem; opacity: 0.9;'>
                 ℹ️ Cálculo inverso: Si envías ${total_enviar:.2f}, recibirás ${recibir:.2f} en efectivo
             </div>
         </div>
@@ -383,13 +475,33 @@ elif recibir < 0:
 
 st.markdown("---")
 
+# Botones de monto rápido - CALCULADORA 2
+st.markdown("<div class='montos-rapidos-label'>⚡ Montos rápidos:</div>", unsafe_allow_html=True)
+
+col1, col2, col3, col4 = st.columns(4)
+with col1:
+    if st.button("$50", key="rapido_50_calc2"):
+        st.session_state.monto_calc2 = 50.0
+with col2:
+    if st.button("$100", key="rapido_100_calc2"):
+        st.session_state.monto_calc2 = 100.0
+with col3:
+    if st.button("$200", key="rapido_200_calc2"):
+        st.session_state.monto_calc2 = 200.0
+with col4:
+    if st.button("$300", key="rapido_300_calc2"):
+        st.session_state.monto_calc2 = 300.0
+
 # Campo 2: Si se envían (USD)
 st.markdown("<div class='label-campo'>📤 ¿Cuánto vas a enviar?</div>", unsafe_allow_html=True)
+
+valor_inicial_calc2 = st.session_state.get('monto_calc2', 0.0)
 enviados = st.number_input(
     "",
     min_value=0.0,
     step=1.0,
     key="enviados_manual",
+    value=valor_inicial_calc2,
     help="Ingresa la cantidad en USD que vas a enviar",
     label_visibility="collapsed"
 )
@@ -402,7 +514,7 @@ if enviados > 0:
         <div class='resultado-container'>
             <div class='resultado-principal'>💵 Recibirás: ${recibir_estimado:.2f} USD</div>
             <div class='resultado-secundario'>Monto enviado: ${enviados:.2f} | Comisión: ${comision_enviados:.2f}</div>
-            <div class='resultado-secundario' style='margin-top: 0.5rem; opacity: 0.8;'>
+            <div class='resultado-secundario' style='margin-top: 0.5rem; opacity: 0.9;'>
                 ℹ️ Cálculo inverso: Para recibir ${recibir_estimado:.2f}, debes enviar ${enviados:.2f}
             </div>
         </div>
@@ -429,12 +541,11 @@ try:
     tasa = float(df.iloc[1, 12])  # Celda M2
     
     st.markdown(f"""
-        <div style='text-align: center; background: rgba(75, 169, 195, 0.15); padding: 1rem; border-radius: 8px; margin: 1rem 0;'>
-            <span style='font-size: 1.2rem; font-weight: 600; color: #2881AB;'>
+        <div class='tasa-box'>
+            <div class='tasa-principal'>
                 📊 Tasa actual: <span style='color: #F36B2D;'>{tasa:.2f} Bs/USD</span>
-            </span>
-            <br>
-            <span style='font-size: 0.85rem; color: #A0A7AF;'>Actualizado: {datetime.now().strftime('%d/%m/%Y %H:%M')}</span>
+            </div>
+            <div class='tasa-secundaria'>Actualizado: {datetime.now().strftime('%d/%m/%Y %H:%M')}</div>
         </div>
     """, unsafe_allow_html=True)
     
@@ -442,37 +553,36 @@ except Exception as e:
     st.error("⚠️ No pudimos cargar la tasa actual desde nuestro sistema. Por favor, intenta nuevamente en unos momentos o contáctanos directamente por WhatsApp.")
     st.stop()
 
-# Botones de monto rápido para bolívares
-st.markdown("""
-    <div class='montos-rapidos'>
-        <span style='color: #2881AB; font-weight: 600; margin-right: 0.5rem;'>Montos rápidos:</span>
-    </div>
-""", unsafe_allow_html=True)
+# Botones de monto rápido - CALCULADORA 3
+st.markdown("<div class='montos-rapidos-label'>⚡ Montos rápidos:</div>", unsafe_allow_html=True)
 
-col1, col2, col3, col4 = st.columns(4)
-monto_rapido_bs = None
-
+col1, col2, col3, col4, col5 = st.columns(5)
 with col1:
-    if st.button("$50", key="rapido_50_bs"):
-        monto_rapido_bs = 50.0
+    if st.button("$20", key="rapido_20_calc3"):
+        st.session_state.monto_calc3 = 20.0
 with col2:
-    if st.button("$100", key="rapido_100_bs"):
-        monto_rapido_bs = 100.0
+    if st.button("$50", key="rapido_50_calc3"):
+        st.session_state.monto_calc3 = 50.0
 with col3:
-    if st.button("$500", key="rapido_500_bs"):
-        monto_rapido_bs = 500.0
+    if st.button("$100", key="rapido_100_calc3"):
+        st.session_state.monto_calc3 = 100.0
 with col4:
-    if st.button("$1000", key="rapido_1000_bs"):
-        monto_rapido_bs = 1000.0
+    if st.button("$200", key="rapido_200_calc3"):
+        st.session_state.monto_calc3 = 200.0
+with col5:
+    if st.button("$500", key="rapido_500_calc3"):
+        st.session_state.monto_calc3 = 500.0
 
 # Modo 1: De USD a Bs
 st.markdown("<div class='label-campo'>📤 ¿Cuántos USD vas a enviar?</div>", unsafe_allow_html=True)
+
+valor_inicial_calc3 = st.session_state.get('monto_calc3', 0.0)
 usd_enviar2 = st.number_input(
     "",
     min_value=0.0,
     step=1.0,
     key="usd_enviar",
-    value=monto_rapido_bs if monto_rapido_bs else 0.0,
+    value=valor_inicial_calc3,
     help="Ingresa la cantidad en USD que vas a enviar",
     label_visibility="collapsed"
 )
@@ -484,7 +594,7 @@ if usd_enviar2 > 0:
         <div class='resultado-container'>
             <div class='resultado-principal'>🇻🇪 Recibirás: {bs_recibir2:,.2f} Bs</div>
             <div class='resultado-secundario'>Envías: ${usd_enviar2:.2f} USD | Tasa: {tasa:.2f} Bs/USD</div>
-            <div class='resultado-secundario' style='margin-top: 0.5rem; opacity: 0.8;'>
+            <div class='resultado-secundario' style='margin-top: 0.5rem; opacity: 0.9;'>
                 ℹ️ Cálculo inverso: Para recibir {bs_recibir2:,.2f} Bs, debes enviar ${usd_enviar2:.2f} USD
             </div>
         </div>
@@ -501,13 +611,40 @@ elif usd_enviar2 < 0:
 
 st.markdown("---")
 
+# Botones de monto rápido - CALCULADORA 4
+st.markdown("<div class='montos-rapidos-label'>⚡ Montos rápidos (Bs):</div>", unsafe_allow_html=True)
+
+col1, col2, col3, col4, col5 = st.columns(5)
+
+# Convertir montos USD a Bs para los botones
+montos_bs = [20 * tasa, 50 * tasa, 100 * tasa, 200 * tasa, 500 * tasa]
+
+with col1:
+    if st.button(f"{montos_bs[0]:,.0f} Bs", key="rapido_bs1_calc4"):
+        st.session_state.monto_calc4 = montos_bs[0]
+with col2:
+    if st.button(f"{montos_bs[1]:,.0f} Bs", key="rapido_bs2_calc4"):
+        st.session_state.monto_calc4 = montos_bs[1]
+with col3:
+    if st.button(f"{montos_bs[2]:,.0f} Bs", key="rapido_bs3_calc4"):
+        st.session_state.monto_calc4 = montos_bs[2]
+with col4:
+    if st.button(f"{montos_bs[3]:,.0f} Bs", key="rapido_bs4_calc4"):
+        st.session_state.monto_calc4 = montos_bs[3]
+with col5:
+    if st.button(f"{montos_bs[4]:,.0f} Bs", key="rapido_bs5_calc4"):
+        st.session_state.monto_calc4 = montos_bs[4]
+
 # Modo 2: De Bs a USD
 st.markdown("<div class='label-campo'>📥 ¿Cuántos Bolívares quieres recibir?</div>", unsafe_allow_html=True)
+
+valor_inicial_calc4 = st.session_state.get('monto_calc4', 0.0)
 bs_recibir = st.number_input(
     "",
     min_value=0.0,
     step=100.0,
     key="bs_recibir",
+    value=valor_inicial_calc4,
     help="Ingresa la cantidad en Bolívares que deseas recibir",
     label_visibility="collapsed"
 )
@@ -519,7 +656,7 @@ if bs_recibir > 0:
         <div class='resultado-container'>
             <div class='resultado-principal'>💵 Debes enviar: ${usd_enviar:.2f} USD</div>
             <div class='resultado-secundario'>Recibirás: {bs_recibir:,.2f} Bs | Tasa: {tasa:.2f} Bs/USD</div>
-            <div class='resultado-secundario' style='margin-top: 0.5rem; opacity: 0.8;'>
+            <div class='resultado-secundario' style='margin-top: 0.5rem; opacity: 0.9;'>
                 ℹ️ Cálculo inverso: Si envías ${usd_enviar:.2f} USD, recibirás {bs_recibir:,.2f} Bs
             </div>
         </div>
@@ -534,11 +671,31 @@ if bs_recibir > 0:
 elif bs_recibir < 0:
     st.error("⚠️ Por favor ingresa un monto válido mayor a 0 Bs")
 
-# Footer
+# Footer con redes sociales
 st.markdown("---")
 st.markdown("""
-    <div style='text-align: center; color: #A0A7AF; font-size: 0.9rem; padding: 2rem 0;'>
-        <p><strong style='color: #2881AB;'>Wallet Cambios</strong> - Tu aliado en transferencias internacionales</p>
-        <p>💬 ¿Tienes dudas? Contáctanos por WhatsApp</p>
+    <div class='footer'>
+        <p><strong>Wallet Cambios</strong> · La solución a tu problema cambiario</p>
+    </div>
+""", unsafe_allow_html=True)
+
+# Botones de redes sociales
+mensaje_ws_footer = "Hola, quiero hacer un cambio"
+st.markdown(f"""
+    <div class='social-buttons'>
+        <a href="{crear_enlace_whatsapp(mensaje_ws_footer)}" target="_blank" class="social-btn social-whatsapp">
+            <span class="social-icon">💬</span>
+            <span>(+58) 414-610-8166</span>
+        </a>
+        
+        <a href="https://www.instagram.com/walletcambios/" target="_blank" class="social-btn social-instagram">
+            <span class="social-icon">📸</span>
+            <span>@walletcambios</span>
+        </a>
+        
+        <a href="mailto:envios@walletcambios.com" class="social-btn social-email">
+            <span class="social-icon">📧</span>
+            <span>envios@walletcambios.com</span>
+        </a>
     </div>
 """, unsafe_allow_html=True)
