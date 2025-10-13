@@ -473,7 +473,7 @@ if enviados > 0:
         </div>
     """, unsafe_allow_html=True)
     
-    mensaje_whatsapp = f"Hola, necesito enviar ${enviados:.2f} para recibir ${recibir_estimado:.2f}"
+    mensaje_whatsapp = f"Hola, necesito enviar ${enviados:.2f} para recibir ${recibir_estimado:.2f} en efectivo"
     st.markdown(f"""
         <a href="{crear_enlace_whatsapp(mensaje_whatsapp)}" target="_blank" class="whatsapp-btn">
             <span style="font-size: 1.5rem;">💬</span> Realiza el cambio ahora
