@@ -396,6 +396,10 @@ recibir = st.number_input(
     label_visibility="collapsed"
 )
 
+# Actualizar el session state si el usuario cambia manualmente el valor
+if recibir != st.session_state.monto_calc1:
+    st.session_state.monto_calc1 = recibir
+
 if recibir > 0:
     total_enviar = recibir / (1 - 0.05)
     comision = total_enviar - recibir
