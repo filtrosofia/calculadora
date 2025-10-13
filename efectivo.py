@@ -9,9 +9,9 @@ st.set_page_config(page_title="Calculadora Wallet Cambios", layout="centered")
 WHATSAPP_NUMBER = "584146108166"
 WHATSAPP_MESSAGE = "Hola, quiero hacer un cambio"
 
-# Función para crear enlace de WhatsApp
-def crear_enlace_whatsapp():
-    mensaje_encoded = urllib.parse.quote(WHATSAPP_MESSAGE)
+# Función para crear enlace de WhatsApp con mensaje personalizado
+def crear_enlace_whatsapp(mensaje):
+    mensaje_encoded = urllib.parse.quote(mensaje)
     return f"https://wa.me/{WHATSAPP_NUMBER}?text={mensaje_encoded}"
 
 # CSS personalizado
@@ -100,8 +100,9 @@ if recibir > 0:
     comision = total_enviar - recibir
     st.markdown(f"**Comisión estimada:** ${comision:.2f}")
     st.markdown(f"**Debes enviar:** ${total_enviar:.2f}")
+    mensaje_whatsapp = f"Hola, necesito enviar ${total_enviar:.2f} para recibir ${recibir:.2f} en efectivo"
     st.markdown(f"""
-        <a href="{crear_enlace_whatsapp()}" target="_blank" class="whatsapp-btn">
+        <a href="{crear_enlace_whatsapp(mensaje_whatsapp)}" target="_blank" class="whatsapp-btn">
             💬 Realiza el cambio con nosotros ahora
         </a>
     """, unsafe_allow_html=True)
@@ -113,8 +114,9 @@ enviados = st.number_input("", min_value=0.0, step=1.0, key="enviados_manual")
 if enviados > 0:
     recibir_estimado = enviados * (1 - 0.05)
     st.markdown(f"**Recibirás en efectivo:** ${recibir_estimado:.2f}")
+    mensaje_whatsapp = f"Hola, necesito enviar {enviados:.2f} USD"
     st.markdown(f"""
-        <a href="{crear_enlace_whatsapp()}" target="_blank" class="whatsapp-btn">
+        <a href="{crear_enlace_whatsapp(mensaje_whatsapp)}" target="_blank" class="whatsapp-btn">
             💬 Realiza el cambio con nosotros ahora
         </a>
     """, unsafe_allow_html=True)
@@ -142,8 +144,9 @@ usd_enviar2 = st.number_input("", min_value=0.0, step=1.0, key="usd_enviar")
 if usd_enviar2 > 0:
     bs_recibir2 = usd_enviar2 * tasa
     st.markdown(f"<div class='resultado'>Se reciben: {bs_recibir2:.2f} Bs</div>", unsafe_allow_html=True)
+    mensaje_whatsapp = f"Hola, necesito enviar {usd_enviar2:.2f} USD"
     st.markdown(f"""
-        <a href="{crear_enlace_whatsapp()}" target="_blank" class="whatsapp-btn">
+        <a href="{crear_enlace_whatsapp(mensaje_whatsapp)}" target="_blank" class="whatsapp-btn">
             💬 Realiza el cambio con nosotros ahora
         </a>
     """, unsafe_allow_html=True)
@@ -158,9 +161,9 @@ bs_recibir = st.number_input("", min_value=0.0, step=1.0, key="bs_recibir")
 if bs_recibir > 0:
     usd_enviar = bs_recibir / tasa
     st.markdown(f"<div class='resultado'>Hay que enviar: ${usd_enviar:.2f} USD</div>", unsafe_allow_html=True)
+    mensaje_whatsapp = f"Hola, necesito enviar {usd_enviar:.2f} USD"
     st.markdown(f"""
-        <a href="{crear_enlace_whatsapp()}" target="_blank" class="whatsapp-btn">
+        <a href="{crear_enlace_whatsapp(mensaje_whatsapp)}" target="_blank" class="whatsapp-btn">
             💬 Realiza el cambio con nosotros ahora
         </a>
     """, unsafe_allow_html=True)
-
