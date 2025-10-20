@@ -459,6 +459,10 @@ enviados = st.number_input(
     label_visibility="collapsed"
 )
 
+# Actualizar el session state si el usuario cambia manualmente el valor
+if enviados != st.session_state.monto_calc2:
+    st.session_state.monto_calc2 = enviados
+
 if enviados > 0:
     recibir_estimado = enviados * (1 - 0.05)
     comision_enviados = enviados - recibir_estimado
@@ -473,7 +477,7 @@ if enviados > 0:
         </div>
     """, unsafe_allow_html=True)
     
-    mensaje_whatsapp = f"Hola, necesito enviar ${enviados:.2f} para recibir ${recibir_estimado:.2f} en efectivo"
+    mensaje_whatsapp = f"Hola, necesito enviar ${enviados:.2f} para recibir ${recibir_estimado:.2f}"
     st.markdown(f"""
         <a href="{crear_enlace_whatsapp(mensaje_whatsapp)}" target="_blank" class="whatsapp-btn">
             <span style="font-size: 1.5rem;">💬</span> Realiza el cambio ahora
@@ -486,12 +490,14 @@ elif enviados < 0:
 st.markdown("---")
 st.markdown("<h2 class='subtitulo-calculadora'>🇻🇪 Calculadora USD a Bolívares</h2>", unsafe_allow_html=True)
 
-# Cargar tasa desde Google Sheets pública con timeout
+# Cargar tasas desde Google Sheets pública con timeout
 sheet_url = "https://docs.google.com/spreadsheets/d/1ig4ihkUIeP7kaaR6yZeyOLF7j38Y_peytGKG6tgkqbw/gviz/tq?tqx=out:csv&sheet=TASAS%20COL%20-%20VEN"
 
 try:
     df = pd.read_csv(sheet_url, header=None)
-    tasa = float(df.iloc[1, 12])  # Celda M2
+    tasa_bs = float(df.iloc[1, 12])  # Celda M2 - Tasa Bolívares
+    tasa_usd_cop = float(df.iloc[3, 12])  # Celda M4 - Tasa USD a COP
+    tasa_cop_usd = float(df.iloc[3, 13])  # Celda N4 - Tasa COP a USD
     
     st.markdown(f"""
         <div class='tasa-box'>
@@ -543,6 +549,10 @@ usd_enviar2 = st.number_input(
     help="Ingresa la cantidad en USD que vas a enviar",
     label_visibility="collapsed"
 )
+
+# Actualizar el session state si el usuario cambia manualmente el valor
+if usd_enviar2 != st.session_state.monto_calc3:
+    st.session_state.monto_calc3 = usd_enviar2
 
 if usd_enviar2 > 0:
     bs_recibir2 = usd_enviar2 * tasa
@@ -609,6 +619,10 @@ bs_recibir = st.number_input(
     help="Ingresa la cantidad en Bolívares que deseas recibir",
     label_visibility="collapsed"
 )
+
+# Actualizar el session state si el usuario cambia manualmente el valor
+if bs_recibir != st.session_state.monto_calc4:
+    st.session_state.monto_calc4 = bs_recibir
 
 if bs_recibir > 0:
     usd_enviar = bs_recibir / tasa
