@@ -495,14 +495,14 @@ sheet_url = "https://docs.google.com/spreadsheets/d/1ig4ihkUIeP7kaaR6yZeyOLF7j38
 
 try:
     df = pd.read_csv(sheet_url, header=None)
-    tasa_bs = float(df.iloc[1, 12])  # Celda M2 - Tasa Bolívares
-    tasa_usd_cop = float(df.iloc[3, 12])  # Celda M4 - Tasa USD a COP
-    tasa_cop_usd = float(df.iloc[3, 13])  # Celda N4 - Tasa COP a USD
+    tasa_bs = float(df.iloc[1, 12])  # Celda M2 - Tasa Bolívares (fila 2, columna M)
+    tasa_usd_cop = float(df.iloc[3, 12])  # Celda M4 - Tasa USD a COP COMPRA (fila 4, columna M)
+    tasa_cop_usd = float(df.iloc[3, 13])  # Celda N4 - Tasa COP a USD VENTA (fila 4, columna N)
     
     st.markdown(f"""
         <div class='tasa-box'>
             <div class='tasa-principal'>
-                📊 Tasa actual: <span style='color: #F36B2D;'>{tasa:.2f} Bs/USD</span>
+                📊 Tasa actual: <span style='color: #F36B2D;'>{tasa_bs:.2f} Bs/USD</span>
             </div>
             <div class='tasa-secundaria'>Actualizado: {datetime.now().strftime('%d/%m/%Y %H:%M')}</div>
         </div>
@@ -555,12 +555,12 @@ if usd_enviar2 != st.session_state.monto_calc3:
     st.session_state.monto_calc3 = usd_enviar2
 
 if usd_enviar2 > 0:
-    bs_recibir2 = usd_enviar2 * tasa
+    bs_recibir2 = usd_enviar2 * tasa_bs
     
     st.markdown(f"""
         <div class='resultado-container'>
             <div class='resultado-principal'>🇻🇪 Recibirás: {bs_recibir2:,.2f} Bs</div>
-            <div class='resultado-secundario'>Envías: ${usd_enviar2:.2f} USD | Tasa: {tasa:.2f} Bs/USD</div>
+            <div class='resultado-secundario'>Envías: ${usd_enviar2:.2f} USD | Tasa: {tasa_bs:.2f} Bs/USD</div>
             <div class='resultado-secundario' style='margin-top: 0.5rem; opacity: 0.9;'>
                 ℹ️ Cálculo inverso: Para recibir {bs_recibir2:,.2f} Bs, debes enviar ${usd_enviar2:.2f} USD
             </div>
@@ -584,7 +584,7 @@ st.markdown("<div class='montos-rapidos-label'>⚡ Montos rápidos (Bs):</div>",
 col1, col2, col3, col4, col5 = st.columns(5)
 
 # Convertir montos USD a Bs para los botones
-montos_bs = [20 * tasa, 50 * tasa, 100 * tasa, 200 * tasa, 500 * tasa]
+montos_bs = [20 * tasa_bs, 50 * tasa_bs, 100 * tasa_bs, 200 * tasa_bs, 500 * tasa_bs]
 
 with col1:
     if st.button(f"{montos_bs[0]:,.0f} Bs", key="rapido_bs1_calc4"):
@@ -625,12 +625,12 @@ if bs_recibir != st.session_state.monto_calc4:
     st.session_state.monto_calc4 = bs_recibir
 
 if bs_recibir > 0:
-    usd_enviar = bs_recibir / tasa
+    usd_enviar = bs_recibir / tasa_bs
     
     st.markdown(f"""
         <div class='resultado-container'>
             <div class='resultado-principal'>💵 Debes enviar: ${usd_enviar:.2f} USD</div>
-            <div class='resultado-secundario'>Recibirás: {bs_recibir:,.2f} Bs | Tasa: {tasa:.2f} Bs/USD</div>
+            <div class='resultado-secundario'>Recibirás: {bs_recibir:,.2f} Bs | Tasa: {tasa_bs:.2f} Bs/USD</div>
             <div class='resultado-secundario' style='margin-top: 0.5rem; opacity: 0.9;'>
                 ℹ️ Cálculo inverso: Si envías ${usd_enviar:.2f} USD, recibirás {bs_recibir:,.2f} Bs
             </div>
@@ -645,6 +645,170 @@ if bs_recibir > 0:
     """, unsafe_allow_html=True)
 elif bs_recibir < 0:
     st.error("⚠️ Por favor ingresa un monto válido mayor a 0 Bs")
+
+# ==================== CALCULADORA USD A COP ====================
+st.markdown("---")
+st.markdown("<h2 class='subtitulo-calculadora'>🇨🇴 Calculadora USD a COP</h2>", unsafe_allow_html=True)
+
+# Mostrar tasa USD a COP
+st.markdown(f"""
+    <div class='tasa-box'>
+        <div class='tasa-principal'>
+            📊 Tasa actual: <span style='color: #F36B2D;'>{tasa_usd_cop:,.2f} COP/USD</span>
+        </div>
+        <div class='tasa-secundaria'>Actualizado: {datetime.now().strftime('%d/%m/%Y %H:%M')}</div>
+    </div>
+""", unsafe_allow_html=True)
+
+# Inicializar session state para calculadora 5
+if 'monto_calc5' not in st.session_state:
+    st.session_state.monto_calc5 = 0.0
+
+# Botones de monto rápido - CALCULADORA 5
+st.markdown("<div class='montos-rapidos-label'>⚡ Montos rápidos:</div>", unsafe_allow_html=True)
+
+col1, col2, col3, col4, col5 = st.columns(5)
+with col1:
+    if st.button("$20", key="rapido_20_calc5"):
+        st.session_state.monto_calc5 = 20.0
+        st.rerun()
+with col2:
+    if st.button("$50", key="rapido_50_calc5"):
+        st.session_state.monto_calc5 = 50.0
+        st.rerun()
+with col3:
+    if st.button("$100", key="rapido_100_calc5"):
+        st.session_state.monto_calc5 = 100.0
+        st.rerun()
+with col4:
+    if st.button("$200", key="rapido_200_calc5"):
+        st.session_state.monto_calc5 = 200.0
+        st.rerun()
+with col5:
+    if st.button("$500", key="rapido_500_calc5"):
+        st.session_state.monto_calc5 = 500.0
+        st.rerun()
+
+# Campo: USD a COP
+st.markdown("<div class='label-campo'>📤 ¿Cuántos USD vas a enviar?</div>", unsafe_allow_html=True)
+
+usd_enviar_cop = st.number_input(
+    "",
+    min_value=0.0,
+    step=1.0,
+    key="usd_enviar_cop",
+    value=st.session_state.monto_calc5,
+    help="Ingresa la cantidad en USD que vas a enviar",
+    label_visibility="collapsed"
+)
+
+# Actualizar el session state si el usuario cambia manualmente el valor
+if usd_enviar_cop != st.session_state.monto_calc5:
+    st.session_state.monto_calc5 = usd_enviar_cop
+
+if usd_enviar_cop > 0:
+    cop_recibir = usd_enviar_cop * tasa_usd_cop
+    
+    st.markdown(f"""
+        <div class='resultado-container'>
+            <div class='resultado-principal'>🇨🇴 Recibirás: ${cop_recibir:,.2f} COP</div>
+            <div class='resultado-secundario'>Envías: ${usd_enviar_cop:.2f} USD | Tasa: {tasa_usd_cop:,.2f} COP/USD</div>
+            <div class='resultado-secundario' style='margin-top: 0.5rem; opacity: 0.9;'>
+                ℹ️ Cálculo inverso: Para recibir ${cop_recibir:,.2f} COP, debes enviar ${usd_enviar_cop:.2f} USD
+            </div>
+        </div>
+    """, unsafe_allow_html=True)
+    
+    mensaje_whatsapp = f"Hola, necesito enviar ${usd_enviar_cop:.2f} USD para recibir ${cop_recibir:,.2f} COP"
+    st.markdown(f"""
+        <a href="{crear_enlace_whatsapp(mensaje_whatsapp)}" target="_blank" class="whatsapp-btn">
+            <span style="font-size: 1.5rem;">💬</span> Realiza el cambio ahora
+        </a>
+    """, unsafe_allow_html=True)
+elif usd_enviar_cop < 0:
+    st.error("⚠️ Por favor ingresa un monto válido mayor a $0")
+
+# ==================== CALCULADORA COP A USD ====================
+st.markdown("---")
+st.markdown("<h2 class='subtitulo-calculadora'>🇨🇴 Calculadora COP a USD</h2>", unsafe_allow_html=True)
+
+# Mostrar tasa COP a USD
+st.markdown(f"""
+    <div class='tasa-box'>
+        <div class='tasa-principal'>
+            📊 Tasa actual: <span style='color: #F36B2D;'>{tasa_cop_usd:.4f} USD/COP</span>
+        </div>
+        <div class='tasa-secundaria'>Actualizado: {datetime.now().strftime('%d/%m/%Y %H:%M')}</div>
+    </div>
+""", unsafe_allow_html=True)
+
+# Inicializar session state para calculadora 6
+if 'monto_calc6' not in st.session_state:
+    st.session_state.monto_calc6 = 0.0
+
+# Botones de monto rápido - CALCULADORA 6
+st.markdown("<div class='montos-rapidos-label'>⚡ Montos rápidos (COP):</div>", unsafe_allow_html=True)
+
+col1, col2, col3, col4, col5 = st.columns(5)
+with col1:
+    if st.button("$100,000", key="rapido_100k_calc6"):
+        st.session_state.monto_calc6 = 100000.0
+        st.rerun()
+with col2:
+    if st.button("$200,000", key="rapido_200k_calc6"):
+        st.session_state.monto_calc6 = 200000.0
+        st.rerun()
+with col3:
+    if st.button("$300,000", key="rapido_300k_calc6"):
+        st.session_state.monto_calc6 = 300000.0
+        st.rerun()
+with col4:
+    if st.button("$400,000", key="rapido_400k_calc6"):
+        st.session_state.monto_calc6 = 400000.0
+        st.rerun()
+with col5:
+    if st.button("$500,000", key="rapido_500k_calc6"):
+        st.session_state.monto_calc6 = 500000.0
+        st.rerun()
+
+# Campo: COP a USD
+st.markdown("<div class='label-campo'>📥 ¿Cuántos Pesos Colombianos vas a enviar?</div>", unsafe_allow_html=True)
+
+cop_enviar = st.number_input(
+    "",
+    min_value=0.0,
+    step=1000.0,
+    key="cop_enviar",
+    value=st.session_state.monto_calc6,
+    help="Ingresa la cantidad en Pesos Colombianos que vas a enviar",
+    label_visibility="collapsed"
+)
+
+# Actualizar el session state si el usuario cambia manualmente el valor
+if cop_enviar != st.session_state.monto_calc6:
+    st.session_state.monto_calc6 = cop_enviar
+
+if cop_enviar > 0:
+    usd_recibir = cop_enviar * tasa_cop_usd
+    
+    st.markdown(f"""
+        <div class='resultado-container'>
+            <div class='resultado-principal'>💵 Recibirás: ${usd_recibir:.2f} USD</div>
+            <div class='resultado-secundario'>Envías: ${cop_enviar:,.2f} COP | Tasa: {tasa_cop_usd:.4f} USD/COP</div>
+            <div class='resultado-secundario' style='margin-top: 0.5rem; opacity: 0.9;'>
+                ℹ️ Cálculo inverso: Para recibir ${usd_recibir:.2f} USD, debes enviar ${cop_enviar:,.2f} COP
+            </div>
+        </div>
+    """, unsafe_allow_html=True)
+    
+    mensaje_whatsapp = f"Hola, necesito enviar ${cop_enviar:,.2f} COP para recibir ${usd_recibir:.2f} USD"
+    st.markdown(f"""
+        <a href="{crear_enlace_whatsapp(mensaje_whatsapp)}" target="_blank" class="whatsapp-btn">
+            <span style="font-size: 1.5rem;">💬</span> Realiza el cambio ahora
+        </a>
+    """, unsafe_allow_html=True)
+elif cop_enviar < 0:
+    st.error("⚠️ Por favor ingresa un monto válido mayor a $0 COP")
 
 # Footer simple
 st.markdown("---")
