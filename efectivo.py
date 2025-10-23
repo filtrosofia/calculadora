@@ -789,12 +789,12 @@ if cop_enviar != st.session_state.monto_calc6:
     st.session_state.monto_calc6 = cop_enviar
 
 if cop_enviar > 0:
-    usd_recibir = cop_enviar / tasa_cop_usd
+    usd_recibir = cop_enviar / tasa_cop_usd_venta
     
     st.markdown(f"""
         <div class='resultado-container'>
             <div class='resultado-principal'>💵 Recibirás: ${usd_recibir:.2f} USD</div>
-            <div class='resultado-secundario'>Envías: ${cop_enviar:,.2f} COP | Tasa: {tasa_cop_usd:,.2f} COP/USD</div>
+            <div class='resultado-secundario'>Envías: ${cop_enviar:,.2f} COP | Tasa: {tasa_cop_usd_venta:,.2f} COP/USD</div>
             <div class='resultado-secundario' style='margin-top: 0.5rem; opacity: 0.9;'>
                 ℹ️ Cálculo inverso: Para recibir ${usd_recibir:.2f} USD, debes enviar ${cop_enviar:,.2f} COP
             </div>
