@@ -512,6 +512,14 @@ except Exception as e:
     st.error("⚠️ No pudimos cargar la tasa actual desde nuestro sistema. Por favor, intenta nuevamente en unos momentos o contáctanos directamente por WhatsApp.")
     st.stop()
 
+# Inicializar session state para calculadora 5
+if 'monto_calc5' not in st.session_state:
+    st.session_state.monto_calc5 = 0.0
+
+# Inicializar session state para calculadora 6
+if 'monto_calc6' not in st.session_state:
+    st.session_state.monto_calc6 = 0.0
+
 # Botones de monto rápido - CALCULADORA 3
 st.markdown("<div class='montos-rapidos-label'>⚡ Montos rápidos:</div>", unsafe_allow_html=True)
 
@@ -654,7 +662,7 @@ st.markdown("<h2 class='subtitulo-calculadora'>🇨🇴 Calculadora USD a COP</h
 st.markdown(f"""
     <div class='tasa-box'>
         <div class='tasa-principal'>
-            📊 Tasa actual: <span style='color: #F36B2D;'>{tasa_usd_cop:,.2f} COP/USD</span>
+            📊 Tasa actual: <span style='color: #F36B2D;'>{tasa_usd_cop_compra:,.2f} COP/USD</span>
         </div>
         <div class='tasa-secundaria'>Actualizado: {datetime.now().strftime('%d/%m/%Y %H:%M')}</div>
     </div>
@@ -707,12 +715,12 @@ if usd_enviar_cop != st.session_state.monto_calc5:
     st.session_state.monto_calc5 = usd_enviar_cop
 
 if usd_enviar_cop > 0:
-    cop_recibir = usd_enviar_cop * tasa_usd_cop
+    cop_recibir = usd_enviar_cop * tasa_usd_cop_compra
     
     st.markdown(f"""
         <div class='resultado-container'>
             <div class='resultado-principal'>🇨🇴 Recibirás: ${cop_recibir:,.2f} COP</div>
-            <div class='resultado-secundario'>Envías: ${usd_enviar_cop:.2f} USD | Tasa: {tasa_usd_cop:,.2f} COP/USD</div>
+            <div class='resultado-secundario'>Envías: ${usd_enviar_cop:.2f} USD | Tasa: {tasa_usd_cop_compra:,.2f} COP/USD</div>
             <div class='resultado-secundario' style='margin-top: 0.5rem; opacity: 0.9;'>
                 ℹ️ Cálculo inverso: Para recibir ${cop_recibir:,.2f} COP, debes enviar ${usd_enviar_cop:.2f} USD
             </div>
@@ -736,7 +744,7 @@ st.markdown("<h2 class='subtitulo-calculadora'>🇨🇴 Calculadora COP a USD</h
 st.markdown(f"""
     <div class='tasa-box'>
         <div class='tasa-principal'>
-            📊 Tasa actual: <span style='color: #F36B2D;'>{tasa_cop_usd:,.2f} COP/USD</span>
+            📊 Tasa actual: <span style='color: #F36B2D;'>{tasa_cop_usd_venta:,.2f} COP/USD</span>
         </div>
         <div class='tasa-secundaria'>Actualizado: {datetime.now().strftime('%d/%m/%Y %H:%M')}</div>
     </div>
@@ -801,7 +809,7 @@ if cop_enviar > 0:
         </div>
     """, unsafe_allow_html=True)
     
-    mensaje_whatsapp = f"Hola, necesito enviar ${cop_enviar:,.2f} COP para recibir ${usd_recibir:.2f} USD"
+    mensaje_whatsapp = f"Hola, necesito enviar ${cop_enviar:,.2f} COP para recibir ${usd_recibir:,.2f} USD"
     st.markdown(f"""
         <a href="{crear_enlace_whatsapp(mensaje_whatsapp)}" target="_blank" class="whatsapp-btn">
             <span style="font-size: 1.5rem;">💬</span> Realiza el cambio ahora
