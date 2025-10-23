@@ -496,8 +496,8 @@ sheet_url = "https://docs.google.com/spreadsheets/d/1ig4ihkUIeP7kaaR6yZeyOLF7j38
 try:
     df = pd.read_csv(sheet_url, header=None)
     tasa_bs = float(df.iloc[1, 12])  # Celda M2 - Tasa Bolívares (fila 2, columna M)
-    tasa_usd_cop = float(df.iloc[3, 12])  # Celda M4 - Tasa USD a COP COMPRA (fila 4, columna M)
-    tasa_cop_usd = float(df.iloc[3, 13])  # Celda N4 - Tasa COP a USD VENTA (fila 4, columna N)
+    tasa_usd_cop_compra = float(df.iloc[3, 12])  # Celda M4 - Tasa USD a COP COMPRA (fila 4, columna M)
+    tasa_cop_usd_venta = float(df.iloc[3, 13])  # Celda N4 - Tasa para COP a USD VENTA (fila 4, columna N)
     
     st.markdown(f"""
         <div class='tasa-box'>
@@ -736,7 +736,7 @@ st.markdown("<h2 class='subtitulo-calculadora'>🇨🇴 Calculadora COP a USD</h
 st.markdown(f"""
     <div class='tasa-box'>
         <div class='tasa-principal'>
-            📊 Tasa actual: <span style='color: #F36B2D;'>{tasa_cop_usd:.4f} USD/COP</span>
+            📊 Tasa actual: <span style='color: #F36B2D;'>{tasa_cop_usd:,.2f} COP/USD</span>
         </div>
         <div class='tasa-secundaria'>Actualizado: {datetime.now().strftime('%d/%m/%Y %H:%M')}</div>
     </div>
@@ -789,12 +789,12 @@ if cop_enviar != st.session_state.monto_calc6:
     st.session_state.monto_calc6 = cop_enviar
 
 if cop_enviar > 0:
-    usd_recibir = cop_enviar * tasa_cop_usd
+    usd_recibir = cop_enviar / tasa_cop_usd
     
     st.markdown(f"""
         <div class='resultado-container'>
             <div class='resultado-principal'>💵 Recibirás: ${usd_recibir:.2f} USD</div>
-            <div class='resultado-secundario'>Envías: ${cop_enviar:,.2f} COP | Tasa: {tasa_cop_usd:.4f} USD/COP</div>
+            <div class='resultado-secundario'>Envías: ${cop_enviar:,.2f} COP | Tasa: {tasa_cop_usd:,.2f} COP/USD</div>
             <div class='resultado-secundario' style='margin-top: 0.5rem; opacity: 0.9;'>
                 ℹ️ Cálculo inverso: Para recibir ${usd_recibir:.2f} USD, debes enviar ${cop_enviar:,.2f} COP
             </div>
