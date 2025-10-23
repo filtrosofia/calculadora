@@ -668,10 +668,6 @@ st.markdown(f"""
     </div>
 """, unsafe_allow_html=True)
 
-# Inicializar session state para calculadora 5
-if 'monto_calc5' not in st.session_state:
-    st.session_state.monto_calc5 = 0.0
-
 # Botones de monto rápido - CALCULADORA 5
 st.markdown("<div class='montos-rapidos-label'>⚡ Montos rápidos:</div>", unsafe_allow_html=True)
 
@@ -749,10 +745,6 @@ st.markdown(f"""
         <div class='tasa-secundaria'>Actualizado: {datetime.now().strftime('%d/%m/%Y %H:%M')}</div>
     </div>
 """, unsafe_allow_html=True)
-
-# Inicializar session state para calculadora 6
-if 'monto_calc6' not in st.session_state:
-    st.session_state.monto_calc6 = 0.0
 
 # Botones de monto rápido - CALCULADORA 6
 st.markdown("<div class='montos-rapidos-label'>⚡ Montos rápidos (COP):</div>", unsafe_allow_html=True)
