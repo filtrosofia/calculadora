@@ -348,38 +348,50 @@ st.markdown("""
             transform: translateY(0);
         }
         
-        /* CRÍTICO: Forzar botones horizontales en móvil */
+        /* CRÍTICO: Forzar botones horizontales en móvil - VERSIÓN CORREGIDA */
         [data-testid="column"] {
-            flex: 1 1 auto !important;
+            flex: 1 1 0% !important;
             min-width: 0 !important;
-            width: auto !important;
         }
         
         [data-testid="stHorizontalBlock"] {
             display: flex !important;
             flex-direction: row !important;
             flex-wrap: nowrap !important;
-            gap: 0.4rem !important;
+            gap: 0.25rem !important;
+            overflow-x: visible !important;
             width: 100% !important;
         }
         
-        /* Ajustes adicionales para móvil */
-        @media screen and (max-width: 640px) {
+        /* Ajustes para que TODOS los botones quepan en pantalla */
+        @media screen and (max-width: 768px) {
             .stButton > button {
-                padding: 0.5rem 0.2rem;
-                font-size: 0.75rem;
+                padding: 0.45rem 0.1rem !important;
+                font-size: 0.7rem !important;
                 white-space: nowrap;
+                min-width: 0 !important;
             }
             
             [data-testid="stHorizontalBlock"] {
-                gap: 0.3rem !important;
+                gap: 0.2rem !important;
             }
         }
         
         @media screen and (max-width: 480px) {
             .stButton > button {
-                padding: 0.4rem 0.15rem;
-                font-size: 0.7rem;
+                padding: 0.4rem 0.05rem !important;
+                font-size: 0.65rem !important;
+            }
+            
+            [data-testid="stHorizontalBlock"] {
+                gap: 0.15rem !important;
+            }
+        }
+        
+        @media screen and (max-width: 380px) {
+            .stButton > button {
+                padding: 0.35rem 0.05rem !important;
+                font-size: 0.6rem !important;
             }
         }
     </style>
