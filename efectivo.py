@@ -22,6 +22,14 @@ if 'monto_calc3' not in st.session_state:
     st.session_state.monto_calc3 = 0.0
 if 'monto_calc4' not in st.session_state:
     st.session_state.monto_calc4 = 0.0
+if 'monto_calc5' not in st.session_state:
+    st.session_state.monto_calc5 = 0.0
+if 'monto_calc5b' not in st.session_state:
+    st.session_state.monto_calc5b = 0.0
+if 'monto_calc6' not in st.session_state:
+    st.session_state.monto_calc6 = 0.0
+if 'monto_calc6b' not in st.session_state:
+    st.session_state.monto_calc6b = 0.0
 
 # Función para crear enlace de WhatsApp con mensaje personalizado
 def crear_enlace_whatsapp(mensaje):
@@ -512,14 +520,6 @@ except Exception as e:
     st.error("⚠️ No pudimos cargar la tasa actual desde nuestro sistema. Por favor, intenta nuevamente en unos momentos o contáctanos directamente por WhatsApp.")
     st.stop()
 
-# Inicializar session state para calculadora 5
-if 'monto_calc5' not in st.session_state:
-    st.session_state.monto_calc5 = 0.0
-
-# Inicializar session state para calculadora 6
-if 'monto_calc6' not in st.session_state:
-    st.session_state.monto_calc6 = 0.0
-
 # Botones de monto rápido - CALCULADORA 3
 st.markdown("<div class='montos-rapidos-label'>⚡ Montos rápidos:</div>", unsafe_allow_html=True)
 
@@ -668,7 +668,7 @@ st.markdown(f"""
     </div>
 """, unsafe_allow_html=True)
 
-# Botones de monto rápido - CALCULADORA 5
+# Botones de monto rápido - CALCULADORA 5A
 st.markdown("<div class='montos-rapidos-label'>⚡ Montos rápidos:</div>", unsafe_allow_html=True)
 
 col1, col2, col3, col4, col5 = st.columns(5)
@@ -732,6 +732,74 @@ if usd_enviar_cop > 0:
 elif usd_enviar_cop < 0:
     st.error("⚠️ Por favor ingresa un monto válido mayor a $0")
 
+st.markdown("---")
+
+# ==================== CALCULADORA 5B: COP DESEADO -> USD A ENVIAR ====================
+
+# Botones de monto rápido - CALCULADORA 5B
+st.markdown("<div class='montos-rapidos-label'>⚡ Montos rápidos (COP):</div>", unsafe_allow_html=True)
+
+col1, col2, col3, col4, col5 = st.columns(5)
+with col1:
+    if st.button("$20K", key="rapido_20k_calc5b"):
+        st.session_state.monto_calc5b = 20000.0
+        st.rerun()
+with col2:
+    if st.button("$50K", key="rapido_50k_calc5b"):
+        st.session_state.monto_calc5b = 50000.0
+        st.rerun()
+with col3:
+    if st.button("$100K", key="rapido_100k_calc5b"):
+        st.session_state.monto_calc5b = 100000.0
+        st.rerun()
+with col4:
+    if st.button("$200K", key="rapido_200k_calc5b"):
+        st.session_state.monto_calc5b = 200000.0
+        st.rerun()
+with col5:
+    if st.button("$400K", key="rapido_400k_calc5b"):
+        st.session_state.monto_calc5b = 400000.0
+        st.rerun()
+
+# Campo: COP deseado
+st.markdown("<div class='label-campo'>📥 ¿Cuántos COP quieres recibir?</div>", unsafe_allow_html=True)
+
+cop_deseado = st.number_input(
+    "",
+    min_value=0.0,
+    step=1000.0,
+    key="cop_deseado",
+    value=st.session_state.monto_calc5b,
+    help="Ingresa la cantidad en Pesos Colombianos que deseas recibir",
+    label_visibility="collapsed"
+)
+
+# Actualizar el session state si el usuario cambia manualmente el valor
+if cop_deseado != st.session_state.monto_calc5b:
+    st.session_state.monto_calc5b = cop_deseado
+
+if cop_deseado > 0:
+    usd_necesarios = cop_deseado / tasa_usd_cop_compra
+    
+    st.markdown(f"""
+        <div class='resultado-container'>
+            <div class='resultado-principal'>💵 Debes enviar: ${usd_necesarios:.2f} USD</div>
+            <div class='resultado-secundario'>Recibirás: ${cop_deseado:,.2f} COP | Tasa: {tasa_usd_cop_compra:,.2f} COP/USD</div>
+            <div class='resultado-secundario' style='margin-top: 0.5rem; opacity: 0.9;'>
+                ℹ️ Cálculo inverso: Si envías ${usd_necesarios:.2f} USD, recibirás ${cop_deseado:,.2f} COP
+            </div>
+        </div>
+    """, unsafe_allow_html=True)
+    
+    mensaje_whatsapp = f"Hola, necesito enviar ${usd_necesarios:.2f} USD para recibir ${cop_deseado:,.2f} COP"
+    st.markdown(f"""
+        <a href="{crear_enlace_whatsapp(mensaje_whatsapp)}" target="_blank" class="whatsapp-btn">
+            <span style="font-size: 1.5rem;">💬</span> Realiza el cambio ahora
+        </a>
+    """, unsafe_allow_html=True)
+elif cop_deseado < 0:
+    st.error("⚠️ Por favor ingresa un monto válido mayor a $0 COP")
+
 # ==================== CALCULADORA COP A USD ====================
 st.markdown("---")
 st.markdown("<h2 class='subtitulo-calculadora'>🇨🇴 Calculadora COP a USD</h2>", unsafe_allow_html=True)
@@ -746,28 +814,28 @@ st.markdown(f"""
     </div>
 """, unsafe_allow_html=True)
 
-# Botones de monto rápido - CALCULADORA 6
+# Botones de monto rápido - CALCULADORA 6A
 st.markdown("<div class='montos-rapidos-label'>⚡ Montos rápidos (COP):</div>", unsafe_allow_html=True)
 
 col1, col2, col3, col4, col5 = st.columns(5)
 with col1:
-    if st.button("$100,000", key="rapido_100k_calc6"):
+    if st.button("$100K", key="rapido_100k_calc6"):
         st.session_state.monto_calc6 = 100000.0
         st.rerun()
 with col2:
-    if st.button("$200,000", key="rapido_200k_calc6"):
+    if st.button("$200K", key="rapido_200k_calc6"):
         st.session_state.monto_calc6 = 200000.0
         st.rerun()
 with col3:
-    if st.button("$300,000", key="rapido_300k_calc6"):
+    if st.button("$300K", key="rapido_300k_calc6"):
         st.session_state.monto_calc6 = 300000.0
         st.rerun()
 with col4:
-    if st.button("$400,000", key="rapido_400k_calc6"):
+    if st.button("$400K", key="rapido_400k_calc6"):
         st.session_state.monto_calc6 = 400000.0
         st.rerun()
 with col5:
-    if st.button("$500,000", key="rapido_500k_calc6"):
+    if st.button("$500K", key="rapido_500k_calc6"):
         st.session_state.monto_calc6 = 500000.0
         st.rerun()
 
@@ -801,7 +869,7 @@ if cop_enviar > 0:
         </div>
     """, unsafe_allow_html=True)
     
-    mensaje_whatsapp = f"Hola, necesito enviar ${cop_enviar:,.2f} COP para recibir ${usd_recibir:,.2f} USD"
+    mensaje_whatsapp = f"Hola, necesito enviar ${cop_enviar:,.2f} COP para recibir ${usd_recibir:.2f} USD"
     st.markdown(f"""
         <a href="{crear_enlace_whatsapp(mensaje_whatsapp)}" target="_blank" class="whatsapp-btn">
             <span style="font-size: 1.5rem;">💬</span> Realiza el cambio ahora
@@ -809,6 +877,74 @@ if cop_enviar > 0:
     """, unsafe_allow_html=True)
 elif cop_enviar < 0:
     st.error("⚠️ Por favor ingresa un monto válido mayor a $0 COP")
+
+st.markdown("---")
+
+# ==================== CALCULADORA 6B: USD DESEADO -> COP A ENVIAR ====================
+
+# Botones de monto rápido - CALCULADORA 6B
+st.markdown("<div class='montos-rapidos-label'>⚡ Montos rápidos (USD):</div>", unsafe_allow_html=True)
+
+col1, col2, col3, col4, col5 = st.columns(5)
+with col1:
+    if st.button("$20", key="rapido_20_calc6b"):
+        st.session_state.monto_calc6b = 20.0
+        st.rerun()
+with col2:
+    if st.button("$50", key="rapido_50_calc6b"):
+        st.session_state.monto_calc6b = 50.0
+        st.rerun()
+with col3:
+    if st.button("$100", key="rapido_100_calc6b"):
+        st.session_state.monto_calc6b = 100.0
+        st.rerun()
+with col4:
+    if st.button("$200", key="rapido_200_calc6b"):
+        st.session_state.monto_calc6b = 200.0
+        st.rerun()
+with col5:
+    if st.button("$500", key="rapido_500_calc6b"):
+        st.session_state.monto_calc6b = 500.0
+        st.rerun()
+
+# Campo: USD deseado
+st.markdown("<div class='label-campo'>📥 ¿Cuántos USD quieres recibir?</div>", unsafe_allow_html=True)
+
+usd_deseado = st.number_input(
+    "",
+    min_value=0.0,
+    step=1.0,
+    key="usd_deseado",
+    value=st.session_state.monto_calc6b,
+    help="Ingresa la cantidad en USD que deseas recibir",
+    label_visibility="collapsed"
+)
+
+# Actualizar el session state si el usuario cambia manualmente el valor
+if usd_deseado != st.session_state.monto_calc6b:
+    st.session_state.monto_calc6b = usd_deseado
+
+if usd_deseado > 0:
+    cop_necesarios = usd_deseado * tasa_cop_usd_venta
+    
+    st.markdown(f"""
+        <div class='resultado-container'>
+            <div class='resultado-principal'>🇨🇴 Debes enviar: ${cop_necesarios:,.2f} COP</div>
+            <div class='resultado-secundario'>Recibirás: ${usd_deseado:.2f} USD | Tasa: {tasa_cop_usd_venta:,.2f} COP/USD</div>
+            <div class='resultado-secundario' style='margin-top: 0.5rem; opacity: 0.9;'>
+                ℹ️ Cálculo inverso: Si envías ${cop_necesarios:,.2f} COP, recibirás ${usd_deseado:.2f} USD
+            </div>
+        </div>
+    """, unsafe_allow_html=True)
+    
+    mensaje_whatsapp = f"Hola, necesito enviar ${cop_necesarios:,.2f} COP para recibir ${usd_deseado:.2f} USD"
+    st.markdown(f"""
+        <a href="{crear_enlace_whatsapp(mensaje_whatsapp)}" target="_blank" class="whatsapp-btn">
+            <span style="font-size: 1.5rem;">💬</span> Realiza el cambio ahora
+        </a>
+    """, unsafe_allow_html=True)
+elif usd_deseado < 0:
+    st.error("⚠️ Por favor ingresa un monto válido mayor a $0")
 
 # Footer simple
 st.markdown("---")
