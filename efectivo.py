@@ -1,4 +1,4 @@
-# Función para crear import streamlit as st
+import streamlit as st
 import pandas as pd
 import urllib.parse
 from datetime import datetime
@@ -952,4 +952,5 @@ st.markdown("""
     <div class='footer'>
         <p><strong>Wallet Cambios</strong> · La solución a tu problema cambiario</p>
     </div>
+""", unsafe_allow_html=True)
 """, unsafe_allow_html=True)
