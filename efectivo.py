@@ -352,25 +352,6 @@ st.markdown(”””
     .stButton > button:active {
         transform: translateY(0);
     }
-    
-    /* Forzar que las columnas se mantengan horizontales en móvil */
-    [data-testid="column"] {
-        flex: 1 1 auto !important;
-        min-width: 0 !important;
-    }
-    
-    [data-testid="stHorizontalBlock"] {
-        flex-wrap: nowrap !important;
-        gap: 0.5rem !important;
-    }
-    
-    /* Ajustar tamaño de botones en móvil */
-    @media screen and (max-width: 640px) {
-        .stButton > button {
-            padding: 0.5rem 0.3rem;
-            font-size: 0.85rem;
-        }
-    }
 </style>
 ```
 
@@ -401,10 +382,6 @@ st.markdown(”””
 st.markdown(”<h2 class='subtitulo-calculadora'>💵 Calculadora de Efectivo</h2>”, unsafe_allow_html=True)
 st.markdown(”<p class='texto-info'>Comisión del <strong>5%</strong> aplicada</p>”, unsafe_allow_html=True)
 
-# Campo 1: Para recibir (USD)
-
-st.markdown(”<div class='label-campo'>📥 ¿Cuánto deseas recibir en efectivo?</div>”, unsafe_allow_html=True)
-
 # Botones de monto rápido para efectivo - CALCULADORA 1
 
 st.markdown(”<div class='montos-rapidos-label'>⚡ Montos rápidos:</div>”, unsafe_allow_html=True)
@@ -426,6 +403,10 @@ with col4:
 if st.button(”$300”, key=“rapido_300_calc1”):
 st.session_state.monto_calc1 = 300.0
 st.rerun()
+
+# Campo 1: Para recibir (USD)
+
+st.markdown(”<div class='label-campo'>📥 ¿Cuánto deseas recibir en efectivo?</div>”, unsafe_allow_html=True)
 
 recibir = st.number_input(
 “”,
@@ -470,10 +451,6 @@ st.error(“⚠️ Por favor ingresa un monto válido mayor a $0”)
 
 st.markdown(”—”)
 
-# Campo 2: Si se envían (USD)
-
-st.markdown(”<div class='label-campo'>📤 ¿Cuánto vas a enviar?</div>”, unsafe_allow_html=True)
-
 # Botones de monto rápido - CALCULADORA 2
 
 st.markdown(”<div class='montos-rapidos-label'>⚡ Montos rápidos:</div>”, unsafe_allow_html=True)
@@ -495,6 +472,10 @@ with col4:
 if st.button(”$300”, key=“rapido_300_calc2”):
 st.session_state.monto_calc2 = 300.0
 st.rerun()
+
+# Campo 2: Si se envían (USD)
+
+st.markdown(”<div class='label-campo'>📤 ¿Cuánto vas a enviar?</div>”, unsafe_allow_html=True)
 
 enviados = st.number_input(
 “”,
@@ -567,10 +548,6 @@ except Exception as e:
 st.error(“⚠️ No pudimos cargar la tasa actual desde nuestro sistema. Por favor, intenta nuevamente en unos momentos o contáctanos directamente por WhatsApp.”)
 st.stop()
 
-# Modo 1: De USD a Bs
-
-st.markdown(”<div class='label-campo'>📤 ¿Cuántos USD vas a enviar?</div>”, unsafe_allow_html=True)
-
 # Botones de monto rápido - CALCULADORA 3
 
 st.markdown(”<div class='montos-rapidos-label'>⚡ Montos rápidos:</div>”, unsafe_allow_html=True)
@@ -596,6 +573,10 @@ with col5:
 if st.button(”$500”, key=“rapido_500_calc3”):
 st.session_state.monto_calc3 = 500.0
 st.rerun()
+
+# Modo 1: De USD a Bs
+
+st.markdown(”<div class='label-campo'>📤 ¿Cuántos USD vas a enviar?</div>”, unsafe_allow_html=True)
 
 usd_enviar2 = st.number_input(
 “”,
@@ -639,10 +620,6 @@ st.error(“⚠️ Por favor ingresa un monto válido mayor a $0”)
 
 st.markdown(”—”)
 
-# Modo 2: De Bs a USD
-
-st.markdown(”<div class='label-campo'>📥 ¿Cuántos Bolívares quieres recibir?</div>”, unsafe_allow_html=True)
-
 # Botones de monto rápido - CALCULADORA 4
 
 st.markdown(”<div class='montos-rapidos-label'>⚡ Montos rápidos (Bs):</div>”, unsafe_allow_html=True)
@@ -673,6 +650,10 @@ with col5:
 if st.button(f”{montos_bs[4]:,.0f} Bs”, key=“rapido_bs5_calc4”):
 st.session_state.monto_calc4 = montos_bs[4]
 st.rerun()
+
+# Modo 2: De Bs a USD
+
+st.markdown(”<div class='label-campo'>📥 ¿Cuántos Bolívares quieres recibir?</div>”, unsafe_allow_html=True)
 
 bs_recibir = st.number_input(
 “”,
@@ -730,10 +711,6 @@ st.markdown(f”””
 </div>
 “””, unsafe_allow_html=True)
 
-# Campo: USD a COP
-
-st.markdown(”<div class='label-campo'>📤 ¿Cuántos USD vas a enviar?</div>”, unsafe_allow_html=True)
-
 # Botones de monto rápido - CALCULADORA 5A
 
 st.markdown(”<div class='montos-rapidos-label'>⚡ Montos rápidos:</div>”, unsafe_allow_html=True)
@@ -759,6 +736,10 @@ with col5:
 if st.button(”$500”, key=“rapido_500_calc5”):
 st.session_state.monto_calc5 = 500.0
 st.rerun()
+
+# Campo: USD a COP
+
+st.markdown(”<div class='label-campo'>📤 ¿Cuántos USD vas a enviar?</div>”, unsafe_allow_html=True)
 
 usd_enviar_cop = st.number_input(
 “”,
@@ -804,10 +785,6 @@ st.markdown(”—”)
 
 # ==================== CALCULADORA 5B: COP DESEADO -> USD A ENVIAR ====================
 
-# Campo: COP deseado
-
-st.markdown(”<div class='label-campo'>📥 ¿Cuántos COP quieres recibir?</div>”, unsafe_allow_html=True)
-
 # Botones de monto rápido - CALCULADORA 5B
 
 st.markdown(”<div class='montos-rapidos-label'>⚡ Montos rápidos (COP):</div>”, unsafe_allow_html=True)
@@ -833,6 +810,10 @@ with col5:
 if st.button(”$400K”, key=“rapido_400k_calc5b”):
 st.session_state.monto_calc5b = 400000.0
 st.rerun()
+
+# Campo: COP deseado
+
+st.markdown(”<div class='label-campo'>📥 ¿Cuántos COP quieres recibir?</div>”, unsafe_allow_html=True)
 
 cop_deseado = st.number_input(
 “”,
@@ -890,10 +871,6 @@ st.markdown(f”””
 </div>
 “””, unsafe_allow_html=True)
 
-# Campo: COP a USD
-
-st.markdown(”<div class='label-campo'>📥 ¿Cuántos Pesos Colombianos vas a enviar?</div>”, unsafe_allow_html=True)
-
 # Botones de monto rápido - CALCULADORA 6A
 
 st.markdown(”<div class='montos-rapidos-label'>⚡ Montos rápidos (COP):</div>”, unsafe_allow_html=True)
@@ -919,6 +896,10 @@ with col5:
 if st.button(”$500K”, key=“rapido_500k_calc6”):
 st.session_state.monto_calc6 = 500000.0
 st.rerun()
+
+# Campo: COP a USD
+
+st.markdown(”<div class='label-campo'>📥 ¿Cuántos Pesos Colombianos vas a enviar?</div>”, unsafe_allow_html=True)
 
 cop_enviar = st.number_input(
 “”,
@@ -964,10 +945,6 @@ st.markdown(”—”)
 
 # ==================== CALCULADORA 6B: USD DESEADO -> COP A ENVIAR ====================
 
-# Campo: USD deseado
-
-st.markdown(”<div class='label-campo'>📥 ¿Cuántos USD quieres recibir?</div>”, unsafe_allow_html=True)
-
 # Botones de monto rápido - CALCULADORA 6B
 
 st.markdown(”<div class='montos-rapidos-label'>⚡ Montos rápidos (USD):</div>”, unsafe_allow_html=True)
@@ -993,6 +970,10 @@ with col5:
 if st.button(”$500”, key=“rapido_500_calc6b”):
 st.session_state.monto_calc6b = 500.0
 st.rerun()
+
+# Campo: USD deseado
+
+st.markdown(”<div class='label-campo'>📥 ¿Cuántos USD quieres recibir?</div>”, unsafe_allow_html=True)
 
 usd_deseado = st.number_input(
 “”,
