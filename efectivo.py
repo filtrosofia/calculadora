@@ -30,6 +30,22 @@ if 'monto_calc6' not in st.session_state:
     st.session_state.monto_calc6 = 0.0
 if 'monto_calc6b' not in st.session_state:
     st.session_state.monto_calc6b = 0.0
+if 'monto_calc7' not in st.session_state:
+    st.session_state.monto_calc7 = 0.0
+if 'monto_calc7b' not in st.session_state:
+    st.session_state.monto_calc7b = 0.0
+if 'monto_calc8' not in st.session_state:
+    st.session_state.monto_calc8 = 0.0
+if 'monto_calc8b' not in st.session_state:
+    st.session_state.monto_calc8b = 0.0
+if 'monto_calc9' not in st.session_state:
+    st.session_state.monto_calc9 = 0.0
+if 'monto_calc9b' not in st.session_state:
+    st.session_state.monto_calc9b = 0.0
+if 'monto_calc10' not in st.session_state:
+    st.session_state.monto_calc10 = 0.0
+if 'monto_calc10b' not in st.session_state:
+    st.session_state.monto_calc10b = 0.0
 
 # Función para crear enlace de WhatsApp con mensaje personalizado
 def crear_enlace_whatsapp(mensaje):
@@ -500,12 +516,20 @@ st.markdown("<h2 class='subtitulo-calculadora'>🇻🇪 Calculadora USD a Bolív
 
 # Cargar tasas desde Google Sheets pública con timeout
 sheet_url = "https://docs.google.com/spreadsheets/d/1ig4ihkUIeP7kaaR6yZeyOLF7j38Y_peytGKG6tgkqbw/gviz/tq?tqx=out:csv&sheet=TASAS%20COL%20-%20VEN"
+sheet_url_tasas_mayor = "https://docs.google.com/spreadsheets/d/1ig4ihkUIeP7kaaR6yZeyOLF7j38Y_peytGKG6tgkqbw/gviz/tq?tqx=out:csv&sheet=Tasas%20al%20mayor"
 
 try:
     df = pd.read_csv(sheet_url, header=None)
     tasa_bs = float(df.iloc[1, 12])  # Celda M2 - Tasa Bolívares (fila 2, columna M)
     tasa_usd_cop_compra = float(df.iloc[3, 12])  # Celda M4 - Tasa USD a COP COMPRA (fila 4, columna M)
     tasa_cop_usd_venta = float(df.iloc[3, 13])  # Celda N4 - Tasa para COP a USD VENTA (fila 4, columna N)
+    
+    # Cargar tasas de la hoja "Tasas al mayor"
+    df_mayor = pd.read_csv(sheet_url_tasas_mayor, header=None)
+    tasa_bs_cop = float(df_mayor.iloc[24, 1])  # Celda B25 - Bs a COP (fila 25, columna B)
+    tasa_cop_bs = float(df_mayor.iloc[25, 1])  # Celda B26 - COP a Bs (fila 26, columna B)
+    tasa_clp_bs = float(df_mayor.iloc[26, 1])  # Celda B27 - CLP a Bs (fila 27, columna B)
+    tasa_clp_cop = float(df_mayor.iloc[27, 1])  # Celda B28 - CLP a COP (fila 28, columna B)
     
     st.markdown(f"""
         <div class='tasa-box'>
@@ -946,10 +970,181 @@ if usd_deseado > 0:
 elif usd_deseado < 0:
     st.error("⚠️ Por favor ingresa un monto válido mayor a $0")
 
-# Footer simple
+# ==================== CALCULADORA COP A BS ====================
 st.markdown("---")
-st.markdown("""
-    <div class='footer'>
-        <p><strong>Wallet Cambios</strong> · La solución a tu problema cambiario</p>
+st.markdown("<h2 class='subtitulo-calculadora'>🇨🇴➡️🇻🇪 Calculadora COP a Bolívares</h2>", unsafe_allow_html=True)
+
+# Mostrar tasa COP a Bs
+st.markdown(f"""
+    <div class='tasa-box'>
+        <div class='tasa-principal'>
+            📊 Tasa actual: <span style='color: #F36B2D;'>{tasa_cop_bs:,.2f} COP/Bs</span>
+        </div>
+        <div class='tasa-secundaria'>Actualizado: {datetime.now().strftime('%d/%m/%Y %H:%M')}</div>
     </div>
 """, unsafe_allow_html=True)
+
+# Botones de monto rápido - CALCULADORA 7A
+st.markdown("<div class='montos-rapidos-label'>⚡ Montos rápidos (COP):</div>", unsafe_allow_html=True)
+
+col1, col2, col3, col4, col5 = st.columns(5)
+with col1:
+    if st.button("$100K", key="rapido_100k_calc7"):
+        st.session_state.monto_calc7 = 100000.0
+        st.rerun()
+with col2:
+    if st.button("$200K", key="rapido_200k_calc7"):
+        st.session_state.monto_calc7 = 200000.0
+        st.rerun()
+with col3:
+    if st.button("$300K", key="rapido_300k_calc7"):
+        st.session_state.monto_calc7 = 300000.0
+        st.rerun()
+with col4:
+    if st.button("$400K", key="rapido_400k_calc7"):
+        st.session_state.monto_calc7 = 400000.0
+        st.rerun()
+with col5:
+    if st.button("$500K", key="rapido_500k_calc7"):
+        st.session_state.monto_calc7 = 500000.0
+        st.rerun()
+
+# Modo A: COP que envías → Bs que recibes
+st.markdown("<div class='label-campo'>📤 ¿Cuántos COP vas a enviar?</div>", unsafe_allow_html=True)
+
+cop_enviar_bs = st.number_input(
+    "",
+    min_value=0.0,
+    step=1000.0,
+    key="cop_enviar_bs",
+    value=st.session_state.monto_calc7,
+    help="Ingresa la cantidad en Pesos Colombianos que vas a enviar",
+    label_visibility="collapsed"
+)
+
+if cop_enviar_bs != st.session_state.monto_calc7:
+    st.session_state.monto_calc7 = cop_enviar_bs
+
+if cop_enviar_bs > 0:
+    bs_recibir_cop = cop_enviar_bs / tasa_cop_bs
+    
+    st.markdown(f"""
+        <div class='resultado-container'>
+            <div class='resultado-principal'>🇻🇪 Recibirás: {bs_recibir_cop:,.2f} Bs</div>
+            <div class='resultado-secundario'>Envías: ${cop_enviar_bs:,.2f} COP | Tasa: {tasa_cop_bs:,.2f} COP/Bs</div>
+            <div class='resultado-secundario' style='margin-top: 0.5rem; opacity: 0.9;'>
+                ℹ️ Cálculo inverso: Para recibir {bs_recibir_cop:,.2f} Bs, debes enviar ${cop_enviar_bs:,.2f} COP
+            </div>
+        </div>
+    """, unsafe_allow_html=True)
+    
+    mensaje_whatsapp = f"Hola, necesito enviar ${cop_enviar_bs:,.2f} COP para recibir {bs_recibir_cop:,.2f} Bs"
+    st.markdown(f"""
+        <a href="{crear_enlace_whatsapp(mensaje_whatsapp)}" target="_blank" class="whatsapp-btn">
+            <span style="font-size: 1.5rem;">💬</span> Realiza el cambio ahora
+        </a>
+    """, unsafe_allow_html=True)
+elif cop_enviar_bs < 0:
+    st.error("⚠️ Por favor ingresa un monto válido mayor a $0 COP")
+
+st.markdown("---")
+
+# Botones de monto rápido - CALCULADORA 7B
+st.markdown("<div class='montos-rapidos-label'>⚡ Montos rápidos (Bs):</div>", unsafe_allow_html=True)
+
+col1, col2, col3, col4, col5 = st.columns(5)
+
+# Convertir montos USD a Bs para los botones
+montos_bs_calc7b = [20 * tasa_bs, 50 * tasa_bs, 100 * tasa_bs, 200 * tasa_bs, 500 * tasa_bs]
+
+with col1:
+    if st.button(f"{montos_bs_calc7b[0]:,.0f} Bs", key="rapido_bs1_calc7b"):
+        st.session_state.monto_calc7b = montos_bs_calc7b[0]
+        st.rerun()
+with col2:
+    if st.button(f"{montos_bs_calc7b[1]:,.0f} Bs", key="rapido_bs2_calc7b"):
+        st.session_state.monto_calc7b = montos_bs_calc7b[1]
+        st.rerun()
+with col3:
+    if st.button(f"{montos_bs_calc7b[2]:,.0f} Bs", key="rapido_bs3_calc7b"):
+        st.session_state.monto_calc7b = montos_bs_calc7b[2]
+        st.rerun()
+with col4:
+    if st.button(f"{montos_bs_calc7b[3]:,.0f} Bs", key="rapido_bs4_calc7b"):
+        st.session_state.monto_calc7b = montos_bs_calc7b[3]
+        st.rerun()
+with col5:
+    if st.button(f"{montos_bs_calc7b[4]:,.0f} Bs", key="rapido_bs5_calc7b"):
+        st.session_state.monto_calc7b = montos_bs_calc7b[4]
+        st.rerun()
+
+# Modo B: Bs que quieres recibir → COP que debes enviar
+st.markdown("<div class='label-campo'>📥 ¿Cuántos Bs quieres recibir?</div>", unsafe_allow_html=True)
+
+bs_deseado_cop = st.number_input(
+    "",
+    min_value=0.0,
+    step=100.0,
+    key="bs_deseado_cop",
+    value=st.session_state.monto_calc7b,
+    help="Ingresa la cantidad en Bolívares que deseas recibir",
+    label_visibility="collapsed"
+)
+
+if bs_deseado_cop != st.session_state.monto_calc7b:
+    st.session_state.monto_calc7b = bs_deseado_cop
+
+if bs_deseado_cop > 0:
+    cop_necesarios_bs = bs_deseado_cop * tasa_cop_bs
+    
+    st.markdown(f"""
+        <div class='resultado-container'>
+            <div class='resultado-principal'>🇨🇴 Debes enviar: ${cop_necesarios_bs:,.2f} COP</div>
+            <div class='resultado-secundario'>Recibirás: {bs_deseado_cop:,.2f} Bs | Tasa: {tasa_cop_bs:,.2f} COP/Bs</div>
+            <div class='resultado-secundario' style='margin-top: 0.5rem; opacity: 0.9;'>
+                ℹ️ Cálculo inverso: Si envías ${cop_necesarios_bs:,.2f} COP, recibirás {bs_deseado_cop:,.2f} Bs
+            </div>
+        </div>
+    """, unsafe_allow_html=True)
+    
+    mensaje_whatsapp = f"Hola, necesito enviar ${cop_necesarios_bs:,.2f} COP para recibir {bs_deseado_cop:,.2f} Bs"
+    st.markdown(f"""
+        <a href="{crear_enlace_whatsapp(mensaje_whatsapp)}" target="_blank" class="whatsapp-btn">
+            <span style="font-size: 1.5rem;">💬</span> Realiza el cambio ahora
+        </a>
+    """, unsafe_allow_html=True)
+elif bs_deseado_cop < 0:
+    st.error("⚠️ Por favor ingresa un monto válido mayor a 0 Bs")
+
+# ==================== CALCULADORA BS A COP ====================
+st.markdown("---")
+st.markdown("<h2 class='subtitulo-calculadora'>🇻🇪➡️🇨🇴 Calculadora Bolívares a COP</h2>", unsafe_allow_html=True)
+
+# Mostrar tasa Bs a COP
+st.markdown(f"""
+    <div class='tasa-box'>
+        <div class='tasa-principal'>
+            📊 Tasa actual: <span style='color: #F36B2D;'>{tasa_bs_cop:,.2f} Bs/COP</span>
+        </div>
+        <div class='tasa-secundaria'>Actualizado: {datetime.now().strftime('%d/%m/%Y %H:%M')}</div>
+    </div>
+""", unsafe_allow_html=True)
+
+# Botones de monto rápido - CALCULADORA 8A
+st.markdown("<div class='montos-rapidos-label'>⚡ Montos rápidos (Bs):</div>", unsafe_allow_html=True)
+
+col1, col2, col3, col4, col5 = st.columns(5)
+
+montos_bs_calc8 = [20 * tasa_bs, 50 * tasa_bs, 100 * tasa_bs, 200 * tasa_bs, 500 * tasa_bs]
+
+with col1:
+    if st.button(f"{montos_bs_calc8[0]:,.0f} Bs", key="rapido_bs1_calc8"):
+        st.session_state.monto_calc8 = montos_bs_calc8[0]
+        st.rerun()
+with col2:
+    if st.button(f"{montos_bs_calc8[1]:,.0f} Bs", key="rapido_bs2_calc8"):
+        st.session_state.monto_calc8 = montos_bs_calc8[1]
+        st.rerun()
+with col3:
+    if st.button(f"{montos_bs_calc8[2]:,.0f} Bs", key="rapido_bs3_calc8"):
+        st.session_state.monto_calc8 = montos
