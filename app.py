@@ -45,7 +45,7 @@ st.markdown("<h1 class='titulo-principal'>Calculadora Wallet Cambios</h1>", unsa
 # Info de horario
 st.markdown("""
     <div class='info-box'>
-        <strong>⏰ Horario de atención:</strong> Lunes a Viernes 8:00 AM - 6:00 PM | Sábados 9:00 AM - 1:00 PM
+        <strong>⏰ Horario de atención:</strong> Lunes a Sábados 8:00 AM - 6:00 PM | Domingos 9:00 AM - 1:00 PM
     </div>
 """, unsafe_allow_html=True)
 
